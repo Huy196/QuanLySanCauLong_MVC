@@ -14,4 +14,9 @@ public class LoginService implements ILoginService{
     public User save(User user) {
         return loginRepository.save(user);
     }
+
+    @Override
+    public User checkAccount(User user) {
+        return loginRepository.findByEmailOrPhoneAndPassword(user.getEmail(), user.getPhone(), user.getPassword());
+    }
 }
