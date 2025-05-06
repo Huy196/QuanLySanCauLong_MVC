@@ -8,15 +8,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/login")
 public class LoginController {
     @Autowired
     private LoginService iLoginService;
-    @GetMapping("/login")
-    public String login(Model model){
+    @GetMapping("")
+    public String login(Model model,HttpSession session){
+        session.removeAttribute("registration");
         model.addAttribute("user",new User());
         return "login";
     }
@@ -35,4 +38,19 @@ public class LoginController {
         session.setAttribute("registrationSuccess", true);
         return "sign_in";
     }
+
+    @PostMapping("account")
+    public String loginAccount(Model model, @ModelAttribute("user") User user, HttpSession session) {
+        User user1 = iLoginService.checkAccount(user);
+        if (user1 != null) {
+            if (user1.getRole() == 1) {
+                return "home_user";
+            } else if (user1.getRole() == 0) {
+                return "home_admin";
+            }
+        }
+        session.setAttribute("registration", true);
+        return "login";
+    }
+
 }

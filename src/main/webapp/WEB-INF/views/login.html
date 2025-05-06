@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Đăng nhập</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -117,7 +119,20 @@
             cursor: pointer;
             color: #333;
         }
-
+        .error-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            text-align: center;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body >
@@ -125,10 +140,10 @@
     <h2>Đăng nhập</h2>
     <h3>DQH - Đặt lịch online sân thể thao</h3>
 
-    <form th:action="@{/login}" th:object="${user}">
+    <form th:action="@{/login/account}" th:object="${user}" id="register-form" method="post">
         <div class="form-group">
-            <label for="emailOrPhone">Số điện thoại hoặc email</label>
-            <input th:field="*{email}" type="text" id="emailOrPhone" placeholder="Nhập số điện thoại hoặc email">
+            <label for="email">Số điện thoại hoặc email</label>
+            <input th:field="*{email}" type="text" id="email" placeholder="Nhập số điện thoại hoặc email">
         </div>
         <div class="form-group" style="position: relative;">
             <label for="password">Mật khẩu</label>
@@ -144,6 +159,8 @@
         <p>Bạn chưa có tài khoản? <a th:href="@{/signIn}" class="link">Đăng ký ngay</a></p>
     </div>
 </div>
+<div id="error-message" class="error-message"></div>
+
 
 <script>
     function togglePassword() {
@@ -161,7 +178,42 @@
         }
     }
 
+    document.getElementById('register-form').addEventListener('submit', function(event) {
+        const email = document.getElementById('email').value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8})$/;
+
+        if (!emailRegex.test(email) && !phoneRegex.test(email)) {
+            showErrorMessage("Email hoặc số điện thoại không hợp lệ!");
+            event.preventDefault();
+        }
+    });
+
+    function showErrorMessage(message) {
+        const errorMessageElement = document.getElementById('error-message');
+        errorMessageElement.innerText = message;
+        errorMessageElement.style.display = "block";
+
+        setTimeout(function() {
+            errorMessageElement.style.display = "none";
+        }, 2000);
+    }
 </script>
 
 </body>
 </html>
+
+<script th:if="${session.registration}">
+    Swal.fire({
+        title: 'Sai tên đăng nhập hoặc mật khẩu!',
+        icon: 'error',
+        timer: 1000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        scrollbarPadding: false,
+        heightAuto: false
+    }).then(function() {
+        window.location.href = '/login';
+    });
+    th:remove="session.registration"
+</script>

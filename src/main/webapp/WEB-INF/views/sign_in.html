@@ -177,13 +177,32 @@
 <script>
     document.getElementById('register-form').addEventListener('submit', function(event) {
         const password = document.getElementById('password').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
+
+        if (!emailRegex.test(email)) {
+            showErrorMessage("Email không hợp lệ!");
+            event.preventDefault();
+            return;
+        }
+
+        if (!phoneRegex.test(phone)) {
+            showErrorMessage("Số điện thoại không hợp lệ! Vui lòng nhập đúng định dạng.");
+            event.preventDefault();
+            return;
+        }
 
         if (password !== confirmPassword) {
             showErrorMessage("Mật khẩu và mật khẩu xác nhận không trùng khớp!");
             event.preventDefault();
+            return;
         }
     });
+
 
     function showErrorMessage(message) {
         const errorMessageElement = document.getElementById('error-message');
@@ -216,7 +235,7 @@
         timerProgressBar: true,
         showConfirmButton: false
     }).then(function() {
-        window.location.href = '/login'; // Chuyển hướng lại về trang login
+        window.location.href = '/login';
     });
     th:remove="session.registrationSuccess"
 </script>
