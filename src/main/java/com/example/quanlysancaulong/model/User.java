@@ -14,8 +14,19 @@ public class User {
     private String phone;
     private String password;
     private int role;
+    private String image;
 
     public User() {
+    }
+
+    public User(int user_id, String name, String email, String phone, String password, int role, String image) {
+        this.user_id = user_id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.role = role;
+        this.image = image;
     }
 
     public User(int user_id, String name, String email, String phone, String password, int role) {
@@ -73,5 +84,13 @@ public class User {
 
     public void setRole(int role) {
         this.role = role;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

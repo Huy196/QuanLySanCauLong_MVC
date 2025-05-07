@@ -156,7 +156,7 @@
 
     <a th:href="@{/}" class="link">Quên mật khẩu?</a>
     <div class="footer">
-        <p>Bạn chưa có tài khoản? <a th:href="@{/signIn}" class="link">Đăng ký ngay</a></p>
+        <p>Bạn chưa có tài khoản? <a th:href="@{/login/signIn}" class="link">Đăng ký ngay</a></p>
     </div>
 </div>
 <div id="error-message" class="error-message"></div>
@@ -180,11 +180,17 @@
 
     document.getElementById('register-form').addEventListener('submit', function(event) {
         const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8})$/;
 
         if (!emailRegex.test(email) && !phoneRegex.test(email)) {
             showErrorMessage("Email hoặc số điện thoại không hợp lệ!");
+            event.preventDefault();
+        }
+
+        if (pass == ""){
+            showErrorMessage("Mật khẩu không được để trống");
             event.preventDefault();
         }
     });
