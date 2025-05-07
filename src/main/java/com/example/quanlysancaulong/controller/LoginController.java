@@ -34,6 +34,7 @@ public class LoginController {
     @PostMapping("saveUser")
     public String save(Model model, @ModelAttribute("user") User user, HttpSession session){
         user.setRole(1);
+        user.setImage("https://toigingiuvedep.vn/wp-content/uploads/2021/05/hinh-anh-mat-cuoi-dep-cute-cam-xuc.jpg");
         iLoginService.save(user);
         session.setAttribute("registrationSuccess", true);
         return "sign_in";
@@ -44,6 +45,7 @@ public class LoginController {
         User user1 = iLoginService.checkAccount(user);
         if (user1 != null) {
             if (user1.getRole() == 1) {
+                session.setAttribute("userId", user1.getUser_id());
                 return "home_user";
             } else if (user1.getRole() == 0) {
                 return "home_admin";
@@ -53,4 +55,9 @@ public class LoginController {
         return "login";
     }
 
+    @GetMapping("logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/login";
+    }
 }

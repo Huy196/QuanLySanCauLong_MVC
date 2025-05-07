@@ -136,7 +136,7 @@
     <h2>Đăng ký</h2>
     <h3>DQH - Đặt lịch online sân thể thao</h3>
 
-    <form th:action="@{/saveUser}" th:object="${user}" method="post" id="register-form">
+    <form th:action="@{/login/saveUser}" th:object="${user}" method="post" id="register-form">
         <div class="form-group">
             <label for="email">Email</label>
             <input th:field="*{email}" type="email" id="email" placeholder="Nhập email" required>

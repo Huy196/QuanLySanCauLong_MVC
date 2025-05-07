@@ -1,0 +1,53 @@
+<div th:fragment="header"
+     style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;border-radius:10px; background-color: #f0f0f0; height: 80px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <button onclick="openNav3()"
+                style="padding: 8px 12px; border: none; color: #8f8f8f; border-radius: 4px; font-size: 2.2em; background: transparent;">
+            ☰
+        </button>
+
+        <input type="text" placeholder="Tìm kiếm..."
+               style="padding: 10px 15px;
+                      border: 1px solid #ccc;
+                      border-radius: 20px;
+                      width: 400px;
+                      height: 40px;
+                      font-size: 16px;
+                      transition: all 0.3s ease;
+                      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">
+    </div>
+
+    <!-- Biểu tượng và menu -->
+    <div style="display: flex; align-items: center; gap: 20px; margin-right: 10px;">
+        <span style="font-size: 2.2em; cursor: pointer;">🔔</span>
+
+        <select onchange="handleSetting(this)"
+                class="form-select"
+                style="width: 80px; font-size: 2.3em; padding: 8px 12px; border-radius: 10px; cursor: pointer;background: #f0f0f0;border: 0px;">
+            <option selected disabled hidden>⚙️</option>
+            <option value="profile">👤 Thông tin cá nhân</option>
+            <option value="logout">🚪 Đăng xuất</option>
+        </select>
+    </div>
+    <script>
+        function openNav3() {
+            const nav3 = document.getElementById("nav-3");
+            if (nav3.style.display === "none") {
+                nav3.style.display = "block";
+            } else {
+                nav3.style.display = "none";
+            }
+        }
+
+        function handleSetting(select) {
+            const value = select.value;
+            if (value === "profile") {
+                window.location.href = "/thong-tin-ca-nhan";
+            } else if (value === "logout") {
+                window.location.href = "/login/logout";
+            }
+            select.selectedIndex = 0;
+        }
+    </script>
+</div>
+
