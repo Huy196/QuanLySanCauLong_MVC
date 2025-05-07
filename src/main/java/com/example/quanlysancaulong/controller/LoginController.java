@@ -48,7 +48,7 @@ public class LoginController {
                 session.setAttribute("userId", user1.getUser_id());
                 return "home_user";
             } else if (user1.getRole() == 0) {
-                return "home_admin";
+                return "admin/home_admin";
             }
         }
         session.setAttribute("registration", true);
