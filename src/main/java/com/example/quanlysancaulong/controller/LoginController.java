@@ -34,7 +34,7 @@ public class LoginController {
     @PostMapping("saveUser")
     public String save(Model model, @ModelAttribute("user") User user, HttpSession session){
         user.setRole(1);
-        user.setImage("https://toigingiuvedep.vn/wp-content/uploads/2021/05/hinh-anh-mat-cuoi-dep-cute-cam-xuc.jpg");
+        user.setImage("default-avatar.jpg");
         iLoginService.save(user);
         session.setAttribute("registrationSuccess", true);
         return "sign_in";
