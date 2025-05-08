@@ -21,20 +21,21 @@
         <div class="container mt-4">
             <h2 class="text-center mb-4">Chỉnh sửa người dùng</h2>
 
-            <form id="editForm" th:action="@{/user/updateUser}" th:object="${user}" method="post" enctype="multipart/form-data"
+            <form id="editForm" th:action="@{/user/updateUser}" th:object="${user}" enctype="multipart/form-data"
+                  method="post"
                   class="mx-auto" style="max-width: 600px;">
                 <input type="hidden" th:field="*{user_id}"/>
+                <input type="hidden" th:field="*{password}"/>
+                <input type="hidden" th:field="*{role}"/>
 
                 <div class="mb-3">
-                    <label for="image" class="form-label">Ảnh đại diện</label>
-                    <div th:if="${user.image != null}" style="text-align: center;display: block">
-
-                        <img th:src="@{*{image}}" id="preview" alt="Avatar" class="img-thumbnail mt-2" style="max-height: 150px;margin-bottom: 10px">
-
-                        <input type="file" th:field="*{image}" class="form-control" id="image">
-
+                    <label class="form-label">Ảnh đại diện</label>
+                    <div style="text-align: center; display: block">
+                        <img id="preview" th:if="*{image != null}" th:src="@{'/uploadFile/' + *{image}}" style="width:100px;margin-top:10px" alt="Ảnh đại diện" />
                     </div>
+                    <input type="file" name="imageFile" class="form-control mt-2" id="image">
                 </div>
+
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Họ và tên</label>
@@ -60,6 +61,8 @@
         </div>
     </div>
 </div>
+<div th:if="${message}" id="flash-message" th:data-message="${message}"></div>
+
 </body>
 </html>
 <style>
@@ -99,18 +102,18 @@
 
 <script>
     let originalImageSrc;
-    document.addEventListener("DOMContentLoaded", function (){
-        const  inputImage = document.getElementById("image");
-        const  previewImage = document.getElementById("preview");
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputImage = document.getElementById("image");
+        const previewImage = document.getElementById("preview");
 
         originalImageSrc = previewImage.src;
 
-        inputImage.addEventListener("change", function (){
+        inputImage.addEventListener("change", function () {
             const file = this.files[0];
 
-            if (file){
+            if (file) {
                 const reader = new FileReader();
-                reader.onload = function (e){
+                reader.onload = function (e) {
                     previewImage.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
@@ -119,10 +122,25 @@
     });
 
 
-    function resetForm(){
+    function resetForm() {
         document.getElementById("editForm").reset();
-        document.getElementById("preview").src = originalImageSrc;
+        previewImage.src = originalImageSrc;
+        document.getElementById("image").value = "";
     }
 
+    document.querySelector("button[type='button']").addEventListener("click", resetForm);
 
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const flashMessageElement = document.getElementById("flash-message");
+        if (flashMessageElement) {
+            const message = flashMessageElement.dataset.message;
+            Swal.fire({
+                title: message,
+                icon: "success",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+    });
 </script>

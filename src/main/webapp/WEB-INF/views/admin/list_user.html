@@ -58,11 +58,13 @@
                     <td th:text="*{email}"></td>
                     <td th:text="*{phone}"></td>
                     <td>
-                        <img th:src="@{*{image}}" alt="User Image"
-                             style="width: 80px; height: auto; border-radius: 8px;">
+                        <img th:src="@{'/uploadFile/' +${user.image}}"
+                             alt="User Image" style="width: 80px; height: auto; border-radius: 8px;">
                     </td>
+
                     <td>
-                        <a th:href="@{'/user/editUser?id=' + ${user.user_id}}" class="btn btn-outline-primary btn-sm" title="Sửa">
+                        <a th:href="@{'/user/editUser?id=' + ${user.user_id}}" class="btn btn-outline-primary btn-sm"
+                           title="Sửa">
                             <i class="fas fa-edit"></i>
                         </a>
 

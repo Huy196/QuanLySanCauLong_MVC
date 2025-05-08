@@ -2,6 +2,7 @@ package com.example.quanlysancaulong.controller;
 
 import com.example.quanlysancaulong.model.User;
 import com.example.quanlysancaulong.service.IUserService;
+import com.example.quanlysancaulong.service.UploadFileService;
 import com.example.quanlysancaulong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,10 +15,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
 
 @Controller
 @RequestMapping("user")
 public class UserController {
+    @Autowired
+    private UploadFileService uploadFileService;
     @Autowired
     private IUserService userService;
 
@@ -51,17 +57,22 @@ public class UserController {
         return "admin/edit_user";
     }
 
-    @PostMapping("updateUser")
-    public String updateUser(Model model, @ModelAttribute("user") User user,
-                             @RequestParam("image")MultipartFile imageFile,
-                             RedirectAttributes redirectAttributes) {
+    @PostMapping("/updateUser")
+    public String updateUser(@ModelAttribute("user") User user,
+                             @RequestParam(value = "imageFile", required = false) MultipartFile image,
+                             Model model,
+                             RedirectAttributes redirectAttributes,
+                             HttpServletRequest request) throws IOException {
 
-        user.setImage(String.valueOf(imageFile));
+        if (image != null && !image.isEmpty()) {
+            String fileName = uploadFileService.uploadFile(image, request);
+            user.setImage(fileName);
+        }
 
         User user1 = userService.saveOrUpdate(user);
         model.addAttribute("user", user1);
         redirectAttributes.addFlashAttribute("message", "Cập nhật thành công!");
 
-        return "redirect:/user/editUser";
+        return "redirect:/user/editUser?id=" + user1.getUser_id();
     }
 }
