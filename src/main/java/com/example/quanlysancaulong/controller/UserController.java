@@ -67,6 +67,9 @@ public class UserController {
         if (image != null && !image.isEmpty()) {
             String fileName = uploadFileService.uploadFile(image, request);
             user.setImage(fileName);
+        }else {
+            User user1 = userService.findByIdUser(user.getUser_id());
+            user.setImage(user1.getImage());
         }
 
         User user1 = userService.saveOrUpdate(user);

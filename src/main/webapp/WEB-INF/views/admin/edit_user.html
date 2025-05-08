@@ -31,7 +31,11 @@
                 <div class="mb-3">
                     <label class="form-label">Ảnh đại diện</label>
                     <div style="text-align: center; display: block">
-                        <img id="preview" th:if="*{image != null}" th:src="@{'/uploadFile/' + *{image}}" style="width:100px;margin-top:10px" alt="Ảnh đại diện" />
+                        <img id="preview"
+                             th:src="@{'/uploadFile/' + *{image}}"
+                             style="width:100px;margin-top:10px"
+                             alt="Ảnh đại diện"/>
+
                     </div>
                     <input type="file" name="imageFile" class="form-control mt-2" id="image">
                 </div>
@@ -119,14 +123,13 @@
                 reader.readAsDataURL(file);
             }
         });
+
+        window.resetForm = function () {
+            location.reload();
+        };
     });
 
 
-    function resetForm() {
-        document.getElementById("editForm").reset();
-        previewImage.src = originalImageSrc;
-        document.getElementById("image").value = "";
-    }
 
     document.querySelector("button[type='button']").addEventListener("click", resetForm);
 
