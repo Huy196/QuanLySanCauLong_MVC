@@ -125,6 +125,6 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploadFile/**")
-                .addResourceLocations("classpath:/uploads/");
+                .addResourceLocations("classpath:/uploadFile/");
     }
 }
