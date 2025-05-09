@@ -3,7 +3,6 @@ package com.example.quanlysancaulong.controller;
 import com.example.quanlysancaulong.model.User;
 import com.example.quanlysancaulong.service.IUserService;
 import com.example.quanlysancaulong.service.UploadFileService;
-import com.example.quanlysancaulong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
