@@ -33,7 +33,7 @@
                     <div style="text-align: center; display: block">
                         <img id="preview"
                              th:src="@{'/uploadFile/' + *{image}}"
-                             style="width:100px;margin-top:10px"
+                             style="margin-top:10px;margin-bottom: 10px"
                              alt="Ảnh đại diện"/>
 
                     </div>
@@ -74,6 +74,13 @@
         width: 100%;
         margin-left: 10px;
     }
+    #preview {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
 
 
     form label {
@@ -96,6 +103,7 @@
     .text-center a {
         font-size: 1.05rem;
         padding: 10px 20px;
+        margin-top: 15px;
     }
 
     h2.text-center {
@@ -109,6 +117,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         const inputImage = document.getElementById("image");
         const previewImage = document.getElementById("preview");
+        const flashMessageElement = document.getElementById("flash-message");
 
         originalImageSrc = previewImage.src;
 
@@ -127,17 +136,9 @@
         window.resetForm = function () {
             location.reload();
         };
-    });
 
-
-
-    document.querySelector("button[type='button']").addEventListener("click", resetForm);
-
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const flashMessageElement = document.getElementById("flash-message");
-        if (flashMessageElement) {
-            const message = flashMessageElement.dataset.message;
+        const message = flashMessageElement.dataset.message;
+        if (message) {
             Swal.fire({
                 title: message,
                 icon: "success",
@@ -146,4 +147,5 @@
             });
         }
     });
+
 </script>

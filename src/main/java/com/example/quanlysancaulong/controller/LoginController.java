@@ -17,24 +17,27 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
     @Autowired
     private LoginService iLoginService;
+
     @GetMapping("")
-    public String login(Model model,HttpSession session){
+    public String login(Model model, HttpSession session) {
         session.removeAttribute("registration");
-        model.addAttribute("user",new User());
+        model.addAttribute("user", new User());
         return "login";
     }
 
     @GetMapping("/signIn")
-    public String signIn(Model model,HttpSession session){
+    public String signIn(Model model, HttpSession session) {
         session.removeAttribute("registrationSuccess");
-        model.addAttribute("user",new User());
+        model.addAttribute("user", new User());
         return "sign_in";
     }
 
     @PostMapping("saveUser")
-    public String save(Model model, @ModelAttribute("user") User user, HttpSession session){
+    public String save(Model model, @ModelAttribute("user") User user, HttpSession session) {
         user.setRole(1);
-        user.setImage("default-avatar.jpg");
+        if (user.getImage() == null) {
+            user.setImage("default-avatar.jpg");
+        }
         iLoginService.save(user);
         session.setAttribute("registrationSuccess", true);
         return "sign_in";
@@ -56,7 +59,7 @@ public class LoginController {
     }
 
     @GetMapping("logout")
-    public String logout(HttpSession session){
+    public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/login";
     }

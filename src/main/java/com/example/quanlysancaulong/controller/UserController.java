@@ -28,7 +28,7 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping("getAllUser")
-    public ModelAndView showAllUser(@RequestParam(defaultValue = "") String search, @PageableDefault(8) Pageable pageable) {
+    public ModelAndView showAllUser(@RequestParam(defaultValue = "") String search, @PageableDefault(6) Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("admin/list_user");
         Page<User> users;
         if (!search.isEmpty()) {
@@ -77,5 +77,11 @@ public class UserController {
         redirectAttributes.addFlashAttribute("message", "Cập nhật thành công!");
 
         return "redirect:/user/editUser?id=" + user1.getUser_id();
+    }
+
+    @GetMapping("addUser")
+    public String showInterfaceAddUser(Model model){
+        model.addAttribute("user",new User());
+        return "admin/add_user";
     }
 }

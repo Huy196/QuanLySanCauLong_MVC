@@ -21,6 +21,10 @@
             <h1>Danh sách người dùng</h1>
         </div>
 
+        <a th:href="@{'/user/addUser'}">
+            Thêm người dùng
+        </a>
+
 
         <div class="container mt-4">
             <div style="margin-left: -150px;margin-bottom: 10px;margin-top: -25px">
@@ -59,7 +63,7 @@
                     <td th:text="*{phone}"></td>
                     <td>
                         <img th:src="@{'/uploadFile/' +${user.image}}"
-                             alt="User Image" style="width: 80px; height: auto; border-radius: 8px;">
+                             alt="User Image" style="border-radius: 8px;" class="user-image">
                     </td>
 
                     <td>
@@ -99,6 +103,15 @@
         width: 100%;
         margin-left: 10px;
     }
+
+    .user-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+
+    }
+
 </style>
 
 <script>
@@ -141,5 +154,6 @@
             });
         }
     });
+
 </script>
 
