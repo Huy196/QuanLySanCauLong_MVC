@@ -64,24 +64,41 @@ public class UserController {
                              RedirectAttributes redirectAttributes,
                              HttpServletRequest request) throws IOException {
 
+        boolean isUpdate = (user.getUser_id() != 0);
+
         if (image != null && !image.isEmpty()) {
             String fileName = uploadFileService.uploadFile(image, request);
             user.setImage(fileName);
         }else {
-            User user1 = userService.findByIdUser(user.getUser_id());
-            user.setImage(user1.getImage());
+            if (isUpdate) {
+                User user1 = userService.findByIdUser(user.getUser_id());
+                user.setImage(user1.getImage());
+            }else {
+                user.setImage("default-avatar.jpg");
+            }
+        }
+
+        if (!isUpdate){
+            user.setRole(1);
         }
 
         User user1 = userService.saveOrUpdate(user);
         model.addAttribute("user", user1);
-        redirectAttributes.addFlashAttribute("message", "Cập nhật thành công!");
 
-        return "redirect:/user/editUser?id=" + user1.getUser_id();
+        if (isUpdate) {
+            redirectAttributes.addFlashAttribute("message", "Cập nhật thành công!");
+            return "redirect:/user/editUser?id=" + user1.getUser_id();
+        }else {
+            redirectAttributes.addFlashAttribute("message", "Thêm người dùng mới thành công!");
+            return "redirect:/user/addUser";
+        }
     }
 
     @GetMapping("addUser")
     public String showInterfaceAddUser(Model model){
-        model.addAttribute("user",new User());
+        User user = new User();
+        user.setImage("default-avatar.jpg");
+        model.addAttribute("user",user);
         return "admin/add_user";
     }
 }
