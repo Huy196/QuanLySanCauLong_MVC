@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -18,15 +17,13 @@
 
 
         <div style="text-align: center;padding: 10px">
-            <h1>Danh sách người dùng</h1>
+            <h1>Danh sách các câu lạc bộ</h1>
         </div>
-
-
 
 
         <div class="container mt-4">
             <div style="margin-left: -150px;margin-bottom: 10px;margin-top: -25px;display: flex">
-                <form th:action="@{'/user/getAllUser'}" method="get">
+                <form th:action="@{'/club/getAllClub'}" method="get">
                     <input th:value="${search}" name="search" type="text" placeholder="Tìm kiếm theo tên..."
                            style="padding: 10px 15px;
                                   border: 1px solid #ccc;
@@ -40,8 +37,11 @@
                             type="submit">Tìm kiếm
                     </button>
                 </form>
-                <a th:href="@{'/user/addUser'}">
-                    <button class="btn btn-success btn-sm" style="border-radius: 15px;width: 200px;height: 40px;margin-left: 200px;font-size: 18px">Thêm người dùng</button>
+                <a th:href="@{'/club/addClub'}">
+                    <button class="btn btn-success btn-sm"
+                            style="border-radius: 15px;width: 200px;height: 40px;margin-left: 200px;font-size: 18px">
+                        Thêm CLB
+                    </button>
                 </a>
 
             </div>
@@ -50,49 +50,51 @@
                 <thead class="table-dark">
                 <tr>
                     <th class="hidden-column">#</th>
+                    <th>Tên CLB</th>
+                    <th>Chủ sở hữu</th>
+                    <th>Loại hình</th>
+                    <th>Địa chỉ</th>
                     <th>Ảnh</th>
-                    <th>Họ và tên</th>
-                    <th>Email</th>
-                    <th>SĐT</th>
+                    <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user, iterStat : ${users}" th:object="${user}">
-                    <td th:text="${users.number * users.size + iterStat.index + 1}"></td>
+                <tr th:each="club, iterStat : ${clubs}" th:object="${club}">
+                    <td th:text="${clubs.number * clubs.size + iterStat.index + 1}"></td>
+                    <td th:text="*{name}"></td>
+                    <td th:text="*{user.name}"></td>
+                    <td th:text="*{type}"></td>
+                    <td th:text="*{address}"></td>
                     <td>
-                        <img th:src="@{'/uploadFile/' +${user.image}}"
+                        <img th:src="@{'/uploadFile/' +${club.image}}"
                              alt="User Image" style="border-radius: 8px;" class="user-image">
                     </td>
-                    <td th:text="*{name}"></td>
-                    <td th:text="*{email}"></td>
-                    <td th:text="*{phone}"></td>
-
+                    <td th:text="*{status}"></td>
 
                     <td>
-                        <a th:href="@{'/user/editUser?id=' + ${user.user_id}}" class="btn btn-outline-primary btn-sm"
+                        <a th:href="@{'/club/editClub?id=' + ${club.club_id}}" class="btn btn-outline-primary btn-sm"
                            title="Sửa">
                             <i class="fas fa-edit"></i>
                         </a>
-
                         <a href="#" class="btn btn-outline-danger btn-sm delete-btn"
-                           th:data-id="${user.user_id}" title="Xóa">
+                           th:data-id="${club.club_id}" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     </td>
                 </tr>
 
 
-                <tr th:if="${users.totalElements == 0}">
-                    <td colspan="6" class="text-center text-danger">Không tìm thấy dữ liệu phù hợp</td>
+                <tr th:if="${clubs.totalElements == 0}">
+                    <td colspan="8" class="text-center text-danger">Không tìm thấy dữ liệu phù hợp</td>
                 </tr>
                 </tbody>
             </table>
 
             <div style="text-align: center">
-                <a th:if="${users.hasPrevious()}" th:href="@{'getAllUser'(page=${users.number -1})}">Trước</a>
-                <span th:text="${users.number + 1}"></span> / <span th:text="${users.totalPages}"></span>
-                <a th:if="${users.hasNext()}" th:href="@{'getAllUser'(page=${users.number +1})}">Sau</a>
+                <a th:if="${clubs.hasPrevious()}" th:href="@{'getAllClub'(page=${clubs.number -1})}">Trước</a>
+                <span th:text="${clubs.number + 1}"></span> / <span th:text="${clubs.totalPages}"></span>
+                <a th:if="${clubs.hasNext()}" th:href="@{'getAllClub'(page=${clubs.number +1})}">Sau</a>
             </div>
         </div>
     </div>
@@ -125,7 +127,7 @@
             btn.addEventListener("click", function (e) {
                 e.preventDefault();
 
-                const userId = this.getAttribute("data-id");
+                const club_id = this.getAttribute("data-id");
 
                 Swal.fire({
                     title: "Bạn có chắc chắn muốn xóa?",
@@ -138,7 +140,7 @@
                     cancelButtonColor: "#3085d6"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = `/user/delete/${userId}`;
+                        window.location.href = `/club/delete/${club_id}`;
                     }
                 });
             });
