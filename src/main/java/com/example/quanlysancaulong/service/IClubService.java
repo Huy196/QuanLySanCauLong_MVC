@@ -11,4 +11,8 @@ public interface IClubService {
     Page<Club> findAllClubByName(Pageable pageable,String name);
 
     void deleteClub(int id);
+
+    Club findClubById(int id);
+
+    Club saveOrUpdate(Club club);
 }
