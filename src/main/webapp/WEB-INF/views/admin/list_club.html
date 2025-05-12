@@ -81,6 +81,9 @@
                            th:data-id="${club.club_id}" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
                         </a>
+                        <a th:href="@{'/club/detailClub?id=' + ${club.club_id}}" class="btn btn-outline-info btn-sm" title="Xem chi tiết">
+                            <i class="fas fa-eye"></i>
+                        </a>
                     </td>
                 </tr>
 

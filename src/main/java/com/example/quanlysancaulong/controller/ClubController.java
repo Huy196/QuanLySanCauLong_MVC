@@ -109,4 +109,12 @@ public class ClubController {
             return "redirect:/club/addUser";
         }
     }
+
+    @GetMapping("detailClub")
+    public String showDetailClub(Model model, @RequestParam("id") int id){
+        Club club = iClubService.findClubById(id);
+        model.addAttribute("club",club);
+        return "admin/detail_club";
+    }
+
 }
