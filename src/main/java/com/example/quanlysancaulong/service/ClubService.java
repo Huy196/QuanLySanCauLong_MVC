@@ -26,4 +26,14 @@ public class ClubService implements IClubService{
     public void deleteClub(int id) {
         clubRepository.deleteById(id);
     }
+
+    @Override
+    public Club findClubById(int id) {
+        return clubRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Club saveOrUpdate(Club club) {
+        return clubRepository.save(club);
+    }
 }

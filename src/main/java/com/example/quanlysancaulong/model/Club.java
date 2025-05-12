@@ -23,6 +23,29 @@ public class Club {
     private String link_file;
     private LocalDateTime create_at;
 
+    private String cover_image;
+
+    public String getCover_image() {
+        return cover_image;
+    }
+
+    public void setCover_image(String cover_image) {
+        this.cover_image = cover_image;
+    }
+
+    public Club(int club_id, User user, String name, String type, String address, String image, String status, String link_file, LocalDateTime create_at, String cover_image) {
+        this.club_id = club_id;
+        this.user = user;
+        this.name = name;
+        this.type = type;
+        this.address = address;
+        this.image = image;
+        this.status = status;
+        this.link_file = link_file;
+        this.create_at = create_at;
+        this.cover_image = cover_image;
+    }
+
     public Club() {
     }
 
