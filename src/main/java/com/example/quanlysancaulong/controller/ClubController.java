@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -98,6 +99,10 @@ public class ClubController {
             club.setLink_file(fileName);
         }
 
+        if (club.getUser().getUser_id() == 0) {
+            club.getUser().setUser_id(1);
+        }
+
         Club club1 = iClubService.saveOrUpdate(club);
         model.addAttribute("club", club1);
 
@@ -106,15 +111,22 @@ public class ClubController {
             return "redirect:/club/editClub?id=" + club1.getClub_id();
         } else {
             redirectAttributes.addFlashAttribute("message", "Thêm câu lạc bộ thành công!");
-            return "redirect:/club/addUser";
+            return "redirect:/club/getAllClub";
+
         }
     }
 
     @GetMapping("detailClub")
-    public String showDetailClub(Model model, @RequestParam("id") int id){
+    public String showDetailClub(Model model, @RequestParam("id") int id) {
         Club club = iClubService.findClubById(id);
-        model.addAttribute("club",club);
+        model.addAttribute("club", club);
         return "admin/detail_club";
+    }
+
+    @GetMapping("showAddClub")
+    public String showAddClub(Model model) {
+        model.addAttribute("club", new Club());
+        return "admin/add_club";
     }
 
 }
