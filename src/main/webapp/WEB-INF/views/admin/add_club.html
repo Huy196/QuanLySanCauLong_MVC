@@ -81,7 +81,7 @@
         <header th:replace="fragments/header_admin :: header"></header>
 
         <div class="container mt-4">
-            <h2 class="text-center mb-4">Chỉnh sửa CLB</h2>
+            <h2 class="text-center mb-4">Thêm mới CLB</h2>
             <div style="margin-top: -20px">
                 <a th:href="@{'/club/getAllClub'}">
                     <i class="bi bi-arrow-bar-left"></i> Quay lại
@@ -89,7 +89,7 @@
             </div>
 
             <form th:action="@{/club/updateClub}" th:object="${club}" method="post" enctype="multipart/form-data"
-                  class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh">
+                  class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh"  onsubmit="return validateForm()">
 
                 <input type="hidden" th:field="*{club_id}"/>
                 <input type="hidden" th:field="*{user.user_id}"/>
@@ -124,7 +124,11 @@
 
                         <div class="mb-4">
                             <label for="type" class="form-label">Loại</label>
-                            <input type="text" id="type" th:field="*{type}" class="form-control" required>
+                            <select id="type" th:field="*{type}" class="form-select" required>
+                                <option value="Football" selected>Football</option>
+                                <option value="Basketball">Basketball</option>
+                                <option value="PickleBall">PickleBall</option>
+                            </select>
                         </div>
 
                         <div class="mb-4">
@@ -141,7 +145,7 @@
                             </select>
                         </div>
                         <div class="mb-4">
-                            <label for="link_file" class="form-label">Chọn file hợp đồng</label>
+                            <label for="link_file" class="form-label">Chọn file hợp đồng (bắt buộc là file Excel hoặc Word: .xlsx, .xls, .doc, .docx)</label>
                             <input type="file" id="link_file" name="linkFile" class="form-control" onchange="displayFileName(this)">
                             <div id="file-name-display" style="margin-top: 10px;">
                                 <span>File hiện tại: <b th:text="${club.link_file}">Chưa có file</b></span>
@@ -199,6 +203,62 @@
             displayElement.textContent = 'Chưa chọn tệp.';
         }
     }
+
+    function validateForm() {
+        const name = document.getElementById("name").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const type = document.getElementById("type").value;
+        const fileInput = document.getElementById("link_file");
+
+        if (!name) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Lỗi nhập liệu',
+                text: 'Tên CLB không được để trống',
+                time:1500,
+            });
+            return false;
+        }
+
+        if (!address) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Lỗi nhập liệu',
+                text: 'Địa chỉ không được để trống',
+                time:1500,
+
+            });
+            return false;
+        }
+
+        if (!type) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Lỗi nhập liệu',
+                text: 'Vui lòng chọn loại CLB',
+                time:1500,
+
+            });
+            return false;
+        }
+        if (fileInput.files.length > 0) {
+            const fileName = fileInput.files[0].name;
+            const excelRegex =  /\.(xlsx|xls|doc|docx)$/i;
+
+            if (!excelRegex.test(fileName)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Định dạng không hợp lệ',
+                    text: 'Chỉ chấp nhận file Excel (.xls, .xlsx)',
+                    timer: 2000,
+                });
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
 </script>
 </body>

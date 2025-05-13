@@ -81,6 +81,7 @@
         .file-link:hover {
             color: #0056b3;
         }
+
         .form-control {
             font-size: 1.5rem;
             font-weight: 500;
@@ -151,8 +152,10 @@
                         </div>
                         <div class="mb-4">
                             <label class="form-label">File hợp đồng</label>
-                            <a th:href="@{${club.link_file}}" th:text="${club.link_file}" download></a>
+                            <a th:href="@{'download?filename=' + ${club.link_file}}"
+                               th:text="${club.link_file}"></a>
                         </div>
+
 
                     </div>
                 </div>

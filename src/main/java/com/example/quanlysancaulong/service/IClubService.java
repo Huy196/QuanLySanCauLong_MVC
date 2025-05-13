@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface IClubService {
     Page<Club> findAllClub(Pageable pageable);
+    Page<Club> findAllNewClub(Pageable pageable);
 
     Page<Club> findAllClubByName(Pageable pageable,String name);
 

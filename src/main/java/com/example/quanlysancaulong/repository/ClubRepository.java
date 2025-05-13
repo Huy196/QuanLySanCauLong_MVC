@@ -9,7 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 public interface ClubRepository extends JpaRepository<Club, Integer> {
     Page<Club> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    @Query("SELECT c FROM Club c ORDER BY c.club_id DESC")
+    @Query("SELECT c FROM Club c where c.status = 'Hoạt động' ORDER BY c.club_id DESC ")
     Page<Club> findAllClubs(Pageable pageable);
+
+    @Query("SELECT c FROM Club c where c.status = 'Chờ duyệt' ORDER BY c.club_id DESC ")
+    Page<Club> findAllNewClubs(Pageable pageable);
 
 }
