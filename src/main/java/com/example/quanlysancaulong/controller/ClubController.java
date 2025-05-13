@@ -3,10 +3,15 @@ package com.example.quanlysancaulong.controller;
 import com.example.quanlysancaulong.model.Club;
 import com.example.quanlysancaulong.service.IClubService;
 import com.example.quanlysancaulong.service.UploadFileService;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +20,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 @Controller
@@ -41,6 +52,22 @@ public class ClubController {
         modelAndView.addObject("clubs", clubs);
         return modelAndView;
     }
+
+    @GetMapping("showAllNewClub")
+    public ModelAndView showAllNewClub(@RequestParam(defaultValue = "") String search, @PageableDefault(6) Pageable pageable) {
+        ModelAndView modelAndView = new ModelAndView("admin/list_club");
+        Page<Club> clubs = null;
+        if (!search.isEmpty()) {
+            clubs = iClubService.findAllClubByName(pageable, search);
+        } else {
+            clubs = iClubService.findAllNewClub(pageable);
+        }
+
+        modelAndView.addObject("search", search);
+        modelAndView.addObject("clubs", clubs);
+        return modelAndView;
+    }
+
 
 
     @GetMapping("delete/{id}")
@@ -129,4 +156,22 @@ public class ClubController {
         return "admin/add_club";
     }
 
+    @GetMapping("/download")
+    public ResponseEntity<Resource> downloadFile(@RequestParam("filename") String filename) throws IOException {
+        final String UPLOAD_DIR = "D:\\IdeaProjects\\QuanLySanCauLong\\src\\main\\webapp\\uploadFile\\";
+
+        Path path = Paths.get(UPLOAD_DIR + filename);
+        File file = path.toFile();
+
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource resource = new FileSystemResource(file);
+
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .body(resource);
+    }
 }

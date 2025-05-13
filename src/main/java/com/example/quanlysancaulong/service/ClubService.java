@@ -21,6 +21,11 @@ public class ClubService implements IClubService{
     }
 
     @Override
+    public Page<Club> findAllNewClub(Pageable pageable) {
+        return clubRepository.findAllNewClubs(pageable);
+    }
+
+    @Override
     public Page<Club> findAllClubByName(Pageable pageable, String name) {
         return clubRepository.findByNameContainingIgnoreCase(name, pageable);
     }
