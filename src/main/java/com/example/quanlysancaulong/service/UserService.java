@@ -15,7 +15,6 @@ public class UserService implements IUserService{
     private UserRepository userRepository;
     @Override
     public Page<User> findAllUser(Pageable pageable) {
-
         return userRepository.findAllUsers(pageable);
     }
 
