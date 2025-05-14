@@ -5,25 +5,26 @@
 <script src="../js/logout.js"></script>
 <head>
     <meta charset="UTF-8">
-    <title>List User</title>
+    <title>List Court</title>
 </head>
 <body>
 <div style="display: flex;padding: 15px">
     <div class="nav-3" id="nav-3">
-        <nav th:replace="fragments/nav3_admin :: footer"></nav>
+        <nav th:replace="fragments/nav3_club :: footer"></nav>
     </div>
-    <div class="header">
-        <header th:replace="fragments/header_admin :: header"></header>
+    <div class="header" style="width: 100%;margin-left: 10px">
+        <header th:replace="fragments/header_club :: header"></header>
 
 
         <div style="text-align: center;padding: 10px">
-            <h1>Danh sách các câu lạc bộ</h1>
+            <h1>Danh sách các sân đấu</h1>
         </div>
 
 
         <div class="container mt-4">
             <div style="margin-left: -150px;margin-bottom: 10px;margin-top: -25px;display: flex">
-                <form th:action="@{'/club/getAllClub'}" method="get">
+                <form th:action="@{'/court/showAllCourt'}" method="get">
+                    <input type="hidden" name="club_id" th:value="${club.club_id}">
                     <input th:value="${search}" name="search" type="text" placeholder="Tìm kiếm theo tên..."
                            style="padding: 10px 15px;
                                   border: 1px solid #ccc;
@@ -37,72 +38,60 @@
                             type="submit">Tìm kiếm
                     </button>
                 </form>
-                <a th:href="@{'/club/showAddClub'}">
+                <a th:href="@{'/court/showAddCourt'}">
                     <button class="btn btn-success btn-sm"
                             style="border-radius: 15px;width: 200px;height: 40px;margin-left: 200px;font-size: 18px">
-                        Thêm CLB
+                        Thêm sân đấu
                     </button>
                 </a>
-
-                <a th:href="@{'showAllNewClub'}" style="margin-left: 250px;margin-top: -8px">
-                    <button class="highlight-button">Yêu cầu mở CLB</button>
-                </a>
-
             </div>
             <table class="table table-striped table-hover table-bordered text-center align-middle"
                    style="margin-left: -150px;width: 123%">
                 <thead class="table-dark">
                 <tr>
-                    <th class="hidden-column">#</th>
-                    <th>Ảnh</th>
-                    <th>Tên CLB</th>
-                    <th>Chủ sở hữu</th>
-                    <th>Loại hình</th>
-                    <th>Địa chỉ</th>
+                    <th class="hidden-column">STT</th>
+                    <th>Tên sân</th>
+                    <th>Loại sân</th>
+                    <th>Mô tả</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="club, iterStat : ${clubs}" th:object="${club}">
-                    <td th:text="${clubs.number * clubs.size + iterStat.index + 1}"></td>
-                    <td>
-                        <img th:src="@{'/uploadFile/' +${club.image}}"
-                             alt="User Image" style="border-radius: 8px;" class="user-image">
-                    </td>
+                <tr th:each="court, iterStat : ${courts}" th:object="${court}">
+                    <td th:text="${courts.number * courts.size + iterStat.index + 1}"></td>
                     <td th:text="*{name}"></td>
-                    <td th:text="*{user.name}"></td>
                     <td th:text="*{type}"></td>
-                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;" th:text="*{address}"></td>
+                    <td th:text="*{description}"></td>
 
                     <td th:text="*{status}"></td>
 
                     <td>
-                        <a th:href="@{'/club/editClub?id=' + ${club.club_id}}" class="btn btn-outline-primary btn-sm"
+                        <a th:href="@{'/court/editCourt?id=' + ${court.court_id}}" class="btn btn-outline-primary btn-sm"
                            title="Sửa">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a href="#" class="btn btn-outline-danger btn-sm delete-btn"
-                           th:data-id="${club.club_id}" title="Xóa">
+                           th:data-id="${court.court_id}" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
                         </a>
-                        <a th:href="@{'/club/detailClub?id=' + ${club.club_id}}" class="btn btn-outline-info btn-sm" title="Xem chi tiết">
+                        <a th:href="@{'/club/detailClub?id=' + ${court.court_id}}" class="btn btn-outline-info btn-sm" title="Xem chi tiết">
                             <i class="fas fa-eye"></i>
                         </a>
                     </td>
                 </tr>
 
 
-                <tr th:if="${clubs.totalElements == 0}">
+                <tr th:if="${courts.totalElements == 0}">
                     <td colspan="8" class="text-center text-danger">Không tìm thấy dữ liệu phù hợp</td>
                 </tr>
                 </tbody>
             </table>
 
             <div style="text-align: center">
-                <a th:if="${clubs.hasPrevious()}" th:href="@{'getAllClub'(page=${clubs.number -1})}">Trước</a>
-                <span th:text="${clubs.number + 1}"></span> / <span th:text="${clubs.totalPages}"></span>
-                <a th:if="${clubs.hasNext()}" th:href="@{'getAllClub'(page=${clubs.number +1})}">Sau</a>
+                <a th:if="${courts.hasPrevious()}" th:href="@{'getAllClub'(page=${courts.number -1})}">Trước</a>
+                <span th:text="${courts.number + 1}"></span> / <span th:text="${courts.totalPages}"></span>
+                <a th:if="${courts.hasNext()}" th:href="@{'getAllClub'(page=${courts.number +1})}">Sau</a>
             </div>
         </div>
     </div>
@@ -111,56 +100,6 @@
 <div th:if="${message}" id="flash-message" th:data-message="${message}"></div>
 </body>
 </html>
-<style>
-    .highlight-button {
-        background-color: #ff4d4d;
-        color: white;
-        font-size: 18px;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-
-        animation: pulse 2s infinite;
-        transition: background-color 0.3s ease;
-    }
-
-    .highlight-button:hover {
-        background-color: #ff1a1a;
-    }
-
-    @keyframes pulse {
-        0% {
-            transform: scale(1);
-            box-shadow: 0 0 0 rgba(255, 77, 77, 0.7);
-        }
-        70% {
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(255, 77, 77, 0.8);
-        }
-        100% {
-            transform: scale(1);
-            box-shadow: 0 0 0 rgba(255, 77, 77, 0.0);
-        }
-    }
-
-    .header {
-        width: 100%;
-        margin-left: 10px;
-    }
-
-    .user-image {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 8px;
-
-    }
-
-</style>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const deleteButtons = document.querySelectorAll(".delete-btn");

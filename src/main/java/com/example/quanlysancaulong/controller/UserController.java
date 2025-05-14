@@ -36,8 +36,8 @@ public class UserController {
             users = userService.findAllUser(pageable);
         }
 
-        modelAndView.addObject("search", search);
-        modelAndView.addObject("users", users);
+//        modelAndView.addObject("search", search);
+//        modelAndView.addObject("users", users);
         return modelAndView;
     }
 
