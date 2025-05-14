@@ -14,11 +14,14 @@
                 class="form-select"
                 style="width: 80px; font-size: 2.3em; padding: 8px 12px; border-radius: 10px; cursor: pointer;background: #f0f0f0;border: 0px;">
             <option selected disabled hidden>⚙️</option>
-            <option value="profile">👤 Thông tin cá nhân</option>
+            <option value="profile">👤 Thông tin CLB</option>
             <option value="logout">🚪 Đăng xuất</option>
         </select>
+        <input type="hidden" id="club_id" th:value="${club.club_id}" />
+
     </div>
     <script>
+        const clubId = document.getElementById("club_id").value;
         function openNav3() {
             const nav3 = document.getElementById("nav-3");
             if (nav3.style.display === "none") {
@@ -31,7 +34,7 @@
         function handleSetting(select) {
             const value = select.value;
             if (value === "profile") {
-                window.location.href = "/thong-tin-ca-nhan";
+                window.location.href = `/club/editClub?id=${clubId}`;
             } else if (value === "logout") {
                 window.location.href = "/login/logout";
             }

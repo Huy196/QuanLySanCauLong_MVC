@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh sửa CLB</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/logout.js"></script>
+    <style>
+        .header {
+            width: 100%;
+            margin-left: 10px;
+        }
+
+        input.form-control {
+            height: 50px;
+            font-size: 1.1rem;
+        }
+        .images {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        img {
+            max-width: 150px;
+            max-height: 150px;
+            margin-top: 5px;
+        }
+
+        .form-container {
+            max-width: 130vh;
+        }
+
+        form input[type="file"] {
+            font-size: 1.1rem;
+            padding: 10px;
+        }
+
+        #preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        #previews {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .images {
+            width: 50vh;
+        }
+        .text-center{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div style="display: flex; padding: 15px;">
+    <!-- Sidebar -->
+    <div class="nav-3" id="nav-3">
+        <nav th:replace="fragments/nav3_club :: footer"></nav>
+    </div>
+
+    <div class="header" style="width: 100%; margin-left: 10px;">
+        <header th:replace="fragments/header_admin :: header"></header>
+
+        <div class="container mt-4">
+            <h2 class="text-center mb-4">Thông tin CLB</h2>
+<!--            <div style="margin-top: -20px">-->
+<!--                <a th:href="@{'/club/getAllClub'}">-->
+<!--                    <i class="bi bi-arrow-bar-left"></i> Quay lại-->
+<!--                </a>-->
+<!--            </div>-->
+
+            <form th:action="@{/club/updateClub}" th:object="${club}" method="post" enctype="multipart/form-data"
+                  class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh" onsubmit="return validateForm()">
+
+                <input type="hidden" th:field="*{club_id}"/>
+                <input type="hidden" th:field="*{user.user_id}"/>
+                <div style="display: flex">
+                    <div class="images">
+                        <div class="mb-3">
+                            <label class="form-label">Ảnh đại diện</label>
+                            <div class="text-center">
+                                <img id="preview" th:src="@{'/uploadFile/' + *{image}}" alt="Ảnh đại diện"
+                                     class="img-thumbnail"/>
+                            </div>
+                            <input type="file" name="avatarFile" class="form-control mt-2" id="avatar"
+                                   onchange="previewImage(this, 'preview')">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Ảnh bìa</label>
+                            <div class="text-center">
+                                <img id="previews" th:src="@{'/uploadFile/' + *{cover_image}}" alt="Ảnh bìa"
+                                     class="img-thumbnail"/>
+                            </div>
+                            <input type="file" name="coverFile" class="form-control mt-2" id="cover"
+                                   onchange="previewImage(this, 'previews')">
+                        </div>
+
+                    </div>
+                    <div style="width: 70vh;margin-left: 20px">
+                        <div class="mb-4">
+                            <label for="name" class="form-label">Tên CLB</label>
+                            <input type="text" id="name" th:field="*{name}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="type" class="form-label">Loại</label>
+                            <select id="type" th:field="*{type}" class="form-select" required>
+                                <option value="Football" selected>Football</option>
+                                <option value="Basketball">Basketball</option>
+                                <option value="PickleBall">PickleBall</option>
+                            </select>
+                        </div>
+
+
+                        <div class="mb-4">
+                            <label for="address" class="form-label">Địa chỉ</label>
+                            <input type="text" id="address" th:field="*{address}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="status" class="form-label">Trạng thái</label>
+                            <select id="status" th:field="*{status}" class="form-select">
+                                <option value="Chờ duyệt">Chờ duyệt</option>
+                                <option value="Hoạt động">Hoạt động</option>
+                                <option value="Ngừng hoạt động">Ngừng hoạt động</option>
+                                <option value="Hủy yêu cầu">Hủy yêu cầu</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="link_file" class="form-label">Chọn file hợp đồng (bắt buộc là file Excel hoặc Word: .xlsx, .xls, .doc, .docx)</label>
+                            <input type="file" id="link_file" name="linkFile" class="form-control" onchange="displayFileName(this)">
+                            <div id="file-name-display" style="margin-top: 10px;">
+                                <span>File hiện tại: <b th:text="${club.link_file}">Chưa có file</b></span>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+                            <button type="button" class="btn btn-secondary ms-2" onclick="resetForm()">Hủy</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:if="${message}" id="flash-message" th:data-message="${message}"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        window.resetForm = function () {
+            location.reload();
+        };
+
+        const flashMessage = document.getElementById("flash-message");
+        if (flashMessage) {
+            const message = flashMessage.getAttribute("data-message");
+            if (message) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thông báo',
+                    text: message,
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+    });
+
+    function previewImage(input, imgId) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = e => document.getElementById(imgId).src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+    }
+    function displayFileName(input) {
+        const fileName = input.files.length > 0 ? input.files[0].name : '';
+        const displayElement = document.getElementById('file-name-display');
+        if (fileName) {
+            displayElement.textContent = 'Tệp đã chọn: ' + fileName;
+        } else {
+            displayElement.textContent = 'Chưa chọn tệp.';
+        }
+    }
+
+    function validateForm() {
+        const name = document.getElementById("name").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const type = document.getElementById("type").value;
+        const fileInput = document.getElementById("link_file");
+
+        if (!name) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Lỗi nhập liệu',
+                text: 'Tên CLB không được để trống',
+                time:1500,
+            });
+            return false;
+        }
+
+        if (!address) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Lỗi nhập liệu',
+                text: 'Địa chỉ không được để trống',
+                time:1500,
+
+            });
+            return false;
+        }
+
+        if (!type) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Lỗi nhập liệu',
+                text: 'Vui lòng chọn loại CLB',
+                time:1500,
+
+            });
+            return false;
+        }
+        if (fileInput.files.length > 0) {
+            const fileName = fileInput.files[0].name;
+            const excelRegex =  /\.(xlsx|xls|doc|docx)$/i;
+
+            if (!excelRegex.test(fileName)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Định dạng không hợp lệ',
+                    text: 'Chỉ chấp nhận file Excel (.xls, .xlsx)',
+                    timer: 2000,
+                });
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+</script>
+</body>
+</html>

@@ -44,4 +44,9 @@ public class ClubService implements IClubService{
     public Club saveOrUpdate(Club club) {
         return clubRepository.save(club);
     }
+
+    @Override
+    public Club findClubByUserId(int id) {
+        return clubRepository.findByUser_UserId(id);
+    }
 }
