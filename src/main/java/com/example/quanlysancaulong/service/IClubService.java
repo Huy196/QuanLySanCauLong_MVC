@@ -16,4 +16,6 @@ public interface IClubService {
     Club findClubById(int id);
 
     Club saveOrUpdate(Club club);
+
+    Club findClubByUserId(int id);
 }

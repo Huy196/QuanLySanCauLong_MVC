@@ -69,7 +69,6 @@ public class ClubController {
     }
 
 
-
     @GetMapping("delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         iClubService.deleteClub(id);
@@ -79,10 +78,17 @@ public class ClubController {
     }
 
     @GetMapping("editClub")
-    public String showFromEditUser(Model model, @RequestParam("id") int id) {
+    public String showFromEditClub(Model model, @RequestParam("id") int id) {
         Club club = iClubService.findClubById(id);
-        model.addAttribute("club", club);
-        return "admin/edit_club";
+        if (club.getUser().getRole() == 0) {
+            model.addAttribute("club", club);
+            return "admin/edit_club";
+        }else if (club.getUser().getRole() == 2){
+            model.addAttribute("club", club);
+            return "admin/edit_club_manage";
+        }else{
+            return " ";
+        }
     }
 
     @PostMapping("updateClub")

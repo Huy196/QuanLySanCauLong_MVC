@@ -1,7 +1,10 @@
 package com.example.quanlysancaulong.controller;
 
+import com.example.quanlysancaulong.model.Club;
 import com.example.quanlysancaulong.model.User;
+import com.example.quanlysancaulong.service.ClubService;
 import com.example.quanlysancaulong.service.LoginService;
+import com.example.quanlysancaulong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,10 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ClubService clubService;
     @Autowired
     private LoginService iLoginService;
 
@@ -52,6 +59,12 @@ public class LoginController {
                 return "home_user";
             } else if (user1.getRole() == 0) {
                 return "admin/home_admin";
+            }else if (user1.getRole() == 2){
+                userService.findByIdUser(user1.getUser_id());
+                Club club = clubService.findClubByUserId(user1.getUser_id());
+                model.addAttribute("user",user1);
+                model.addAttribute("club",club);
+                return "admin/home_club";
             }
         }
         session.setAttribute("registration", true);
