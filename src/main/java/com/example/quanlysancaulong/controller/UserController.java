@@ -36,8 +36,8 @@ public class UserController {
             users = userService.findAllUser(pageable);
         }
 
-//        modelAndView.addObject("search", search);
-//        modelAndView.addObject("users", users);
+        modelAndView.addObject("search", search);
+        modelAndView.addObject("users", users);
         return modelAndView;
     }
 
@@ -60,13 +60,12 @@ public class UserController {
     public String updateUser(@ModelAttribute("user") User user,
                              @RequestParam(value = "imageFile", required = false) MultipartFile image,
                              Model model,
-                             RedirectAttributes redirectAttributes,
-                             HttpServletRequest request) throws IOException {
+                             RedirectAttributes redirectAttributes) throws IOException {
 
         boolean isUpdate = (user.getUser_id() != 0);
 
         if (image != null && !image.isEmpty()) {
-            String fileName = uploadFileService.uploadFile(image, request);
+            String fileName = uploadFileService.uploadFile(image);
             user.setImage(fileName);
         }else {
             if (isUpdate) {

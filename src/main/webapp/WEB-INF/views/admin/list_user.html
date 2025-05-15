@@ -61,7 +61,7 @@
                 <tr th:each="user, iterStat : ${users}" th:object="${user}">
                     <td th:text="${users.number * users.size + iterStat.index + 1}"></td>
                     <td>
-                        <img th:src="@{'/uploadFile/' +${user.image}}"
+                        <img th:src="@{'/uploadFile/' + ${user.image}}"
                              alt="User Image" style="border-radius: 8px;" class="user-image">
                     </td>
                     <td th:text="*{name}"></td>

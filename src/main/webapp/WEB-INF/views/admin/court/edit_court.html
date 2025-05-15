@@ -108,7 +108,7 @@
             </div>
 
             <form th:action="@{/court/updateCourt}" th:object="${court}" method="post" enctype="multipart/form-data"
-                  class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh"
+                  class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh;font-size: 1.4em"
                   onsubmit="return validateForm()">
                 <input type="hidden" th:field="*{court_id}"/>
                 <div style="display: flex">
@@ -144,7 +144,7 @@
                     </div>
                     <div style="margin-left: 100px;width: 60vh">
                         <div class="mb-3">
-                            <label class="form-label">Bảng giá thuê theo khung giờ (30 phút)</label>
+                            <label class="form-label">Bảng giá thuê theo khung giờ</label>
                             <table class="table table-bordered">
                                 <thead class="table-light">
                                 <tr>
@@ -154,7 +154,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>30p</td>
+                                    <td th:text="*{time_frame + 'p'}" style="text-align: center"></td>
                                     <td>
                                         <input type="text" class="form-control money-input" min="0" id="price"
                                                th:value="${formatPrice}" name="price" required>
