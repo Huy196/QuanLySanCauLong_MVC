@@ -67,7 +67,7 @@
                     <td th:text="*{status}"></td>
 
                     <td>
-                        <a th:href="@{'/court/editCourt?id=' + ${court.court_id}}" class="btn btn-outline-primary btn-sm"
+                        <a th:href="@{'/court/editCourt?club_id=' + ${club.club_id} + '&court_id=' + ${court.court_id}}" class="btn btn-outline-primary btn-sm"
                            title="Sửa">
                             <i class="fas fa-edit"></i>
                         </a>

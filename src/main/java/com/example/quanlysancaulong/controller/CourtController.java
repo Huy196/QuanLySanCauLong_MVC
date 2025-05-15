@@ -2,14 +2,17 @@ package com.example.quanlysancaulong.controller;
 
 import com.example.quanlysancaulong.model.Club;
 import com.example.quanlysancaulong.model.Court;
+import com.example.quanlysancaulong.model.Image;
 import com.example.quanlysancaulong.service.IClubService;
 import com.example.quanlysancaulong.service.ICourtService;
+import com.example.quanlysancaulong.service.IImageService;
 import com.example.quanlysancaulong.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,14 +28,16 @@ import java.util.Locale;
 @RequestMapping("court")
 public class CourtController {
     @Autowired
+    private IImageService iImageService;
+    @Autowired
     private ICourtService iCourtService;
 
     @Autowired
     private IClubService clubService;
 
     @GetMapping("showAllCourt")
-    private ModelAndView showAllCourt(@RequestParam(defaultValue = "") String search,@RequestParam("club_id") int club_id, @PageableDefault(6) Pageable pageable){
-        ModelAndView modelAndView = new ModelAndView("admin/club/list_court");
+    private ModelAndView showAllCourt(@RequestParam(defaultValue = "") String search, @RequestParam("club_id") int club_id, @PageableDefault(6) Pageable pageable) {
+        ModelAndView modelAndView = new ModelAndView("admin/court/list_court");
 
         Page<Court> courts = null;
 
@@ -41,6 +46,7 @@ public class CourtController {
         } else {
             courts = iCourtService.findAllCourt(pageable);
         }
+
         Club club = clubService.findClubById(club_id);
 
         List<String> formattedPrices = new ArrayList<>();
@@ -49,11 +55,34 @@ public class CourtController {
             String formattedPrice = currencyFormat.format(court.getPrice());
             formattedPrices.add(formattedPrice);
         }
-        modelAndView.addObject("courts",courts);
-        modelAndView.addObject("club",club);
-        modelAndView.addObject("search",search);
+
+
+        modelAndView.addObject("courts", courts);
+        modelAndView.addObject("club", club);
+        modelAndView.addObject("search", search);
         modelAndView.addObject("formattedPrices", formattedPrices);
         return modelAndView;
+    }
+
+    @GetMapping("editCourt")
+    private String showFormEditCou(Model model,
+                                   @RequestParam("club_id") int club_id,
+                                   @RequestParam("court_id") int court_id) {
+        Club club = clubService.findClubById(club_id);
+        Court court = iCourtService.findByIdCourt(court_id);
+
+        DecimalFormat numberFormat = new DecimalFormat("#,###");
+        String formatPrice = numberFormat.format(court.getPrice());
+
+
+        List<Image> imageUrls = iImageService.findAllImage(court_id);
+
+        model.addAttribute("club",club);
+        model.addAttribute("imageUrls",imageUrls);
+        model.addAttribute("court",court);
+        model.addAttribute("formatPrice",formatPrice);
+
+        return "admin/court/edit_court";
     }
 
 }

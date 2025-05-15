@@ -10,4 +10,6 @@ public interface ICourtService {
 
     Page<Court> searchNameCourt(String name,Pageable pageable);
 
+    Court findByIdCourt(int court_id);
+
 }

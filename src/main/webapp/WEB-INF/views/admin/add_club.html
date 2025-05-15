@@ -88,8 +88,8 @@
                 </a>
             </div>
 
-            <form th:action="@{/club/updateClub}" th:object="${club}" method="post" enctype="multipart/form-data"
-                  class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh"  onsubmit="return validateForm()">
+            <form th:action="@{/WEB-INF/views/admin/court/updateClub}" th:object="${club}" method="post" enctype="multipart/form-data"
+                  class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh" onsubmit="return validateForm()">
 
                 <input type="hidden" th:field="*{club_id}"/>
                 <input type="hidden" th:field="*{user.user_id}"/>
