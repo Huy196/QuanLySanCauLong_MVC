@@ -22,6 +22,7 @@ public class Court {
     private String name;
     private String type;
     private String description;
+    private int time_frame;
     private BigDecimal price;
 
     private String status;
@@ -29,15 +30,24 @@ public class Court {
     public Court() {
     }
 
-    public Court(int court_id, User user, Club club, String name, String type, String description, BigDecimal price, String status) {
+    public Court(int court_id, User user, Club club, String name, String type, String description, int time_frame, BigDecimal price, String status) {
         this.court_id = court_id;
         this.user = user;
         this.club = club;
         this.name = name;
         this.type = type;
         this.description = description;
+        this.time_frame = time_frame;
         this.price = price;
         this.status = status;
+    }
+
+    public int getTime_frame() {
+        return time_frame;
+    }
+
+    public void setTime_frame(int time_frame) {
+        this.time_frame = time_frame;
     }
 
     public String getType() {

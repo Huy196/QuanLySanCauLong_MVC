@@ -80,14 +80,13 @@ public class ClubController {
     @GetMapping("editClub")
     public String showFromEditClub(Model model, @RequestParam("id") int id) {
         Club club = iClubService.findClubById(id);
-        if (club.getUser().getRole() == 0) {
-            model.addAttribute("club", club);
-            return "admin/edit_club";
-        }else if (club.getUser().getRole() == 2){
+        if (club.getUser().getRole() == 2){
             model.addAttribute("club", club);
             return "admin/edit_club_manage";
         }else{
-            return " ";
+            model.addAttribute("club", club);
+            return "admin/edit_club";
+
         }
     }
 
@@ -97,13 +96,12 @@ public class ClubController {
                               @RequestParam(value = "coverFile", required = false) MultipartFile cover,
                               @RequestParam(value = "linkFile") MultipartFile linkFile,
                               Model model,
-                              RedirectAttributes redirectAttributes,
-                              HttpServletRequest request) throws IOException {
+                              RedirectAttributes redirectAttributes) throws IOException {
         boolean isUpdate = (club.getClub_id() != 0);
         club.setCreate_at(LocalDateTime.now());
 
         if (avatar != null && !avatar.isEmpty()) {
-            String fileAvatar = uploadFileService.uploadFile(avatar, request);
+            String fileAvatar = uploadFileService.uploadFile(avatar);
             club.setImage(fileAvatar);
         } else {
             if (isUpdate) {
@@ -115,7 +113,7 @@ public class ClubController {
         }
 
         if (cover != null && !cover.isEmpty()) {
-            String fileCover = uploadFileService.uploadFile(cover, request);
+            String fileCover = uploadFileService.uploadFile(cover);
             club.setCover_image(fileCover);
 
         } else {
@@ -128,7 +126,7 @@ public class ClubController {
         }
 
         if (!linkFile.isEmpty()) {
-            String fileName = uploadFileService.uploadFile(linkFile, request);
+            String fileName = uploadFileService.uploadFile(linkFile);
             club.setLink_file(fileName);
         }
 

@@ -20,4 +20,9 @@ public class CourtService implements ICourtService{
     public Page<Court> searchNameCourt(String name, Pageable pageable) {
         return courtRepository.findByNameContainingIgnoreCase(name,pageable);
     }
+
+    @Override
+    public Court findByIdCourt(int court_id) {
+        return courtRepository.findById(court_id).orElse(null);
+    }
 }

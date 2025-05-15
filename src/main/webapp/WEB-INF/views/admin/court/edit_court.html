@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh sửa CLB</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/logout.js"></script>
+    <style>
+        .header {
+            width: 100%;
+            margin-left: 10px;
+        }
+
+        input.form-control {
+            height: 50px;
+            font-size: 1.1rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        img {
+            max-width: 140px;
+            max-height: 140px;
+            margin-top: 5px;
+        }
+
+        .form-container {
+            max-width: 160vh;
+        }
+
+        form input[type="file"] {
+            font-size: 1.1rem;
+            padding: 10px;
+        }
+
+        .text-center {
+            margin-top: 10px;
+        }
+
+
+        #imagePreview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-width: 100%;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-left: 15px;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            line-height: 22px;
+            text-align: center;
+            z-index: 10;
+        }
+
+    </style>
+</head>
+<body>
+<div style="display: flex; padding: 15px;">
+    <!-- Sidebar -->
+    <div class="nav-3" id="nav-3">
+        <nav th:replace="fragments/nav3_club :: footer"></nav>
+    </div>
+
+    <div class="header" style="width: 100%; margin-left: 10px;">
+        <header th:replace="fragments/header_club :: header"></header>
+
+        <div class="container mt-4">
+            <h2 class="text-center mb-4">Chỉnh sửa sân cầu</h2>
+            <div style="margin-top: -20px">
+                <a th:href="@{'/court/showAllCourt?club_id=' + ${club.club_id} + '&court_id=' + ${court.court_id}}">
+                    <i class="bi bi-arrow-bar-left"></i> Quay lại
+                </a>
+            </div>
+
+            <form th:action="@{/court/updateCourt}" th:object="${court}" method="post" enctype="multipart/form-data"
+                  class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh;font-size: 1.4em"
+                  onsubmit="return validateForm()">
+                <input type="hidden" th:field="*{court_id}"/>
+                <div style="display: flex">
+                    <div style="width: 65vh;height: 62vh">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Tên sân</label>
+                            <input type="text" th:field="*{name}" id="name" class="form-control"
+                                   placeholder="Nhập tên sân"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Loại sân</label>
+                            <select id="type" th:field="*{type}" class="form-select">
+                                <option value="Cầu lông">Cầu lông</option>
+                                <option value="Bóng đá">Bóng đá</option>
+                                <option value="Tennis">Tennis</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Mô tả</label>
+                            <textarea th:field="*{description}" id="description" class="form-control" rows="4"
+                                      placeholder="Nhập mô tả"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Trạng thái</label>
+                            <select th:field="*{status}" id="status" class="form-select">
+                                <option value="Đang hoạt động">Đang hoạt động</option>
+                                <option value="Tạm ngưng">Tạm ngưng</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-left: 100px;width: 60vh">
+                        <div class="mb-3">
+                            <label class="form-label">Bảng giá thuê theo khung giờ</label>
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Khung giờ</th>
+                                    <th>Giá (VNĐ)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="*{time_frame + 'p'}" style="text-align: center"></td>
+                                    <td>
+                                        <input type="text" class="form-control money-input" min="0" id="price"
+                                               th:value="${formatPrice}" name="price" required>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Chọn ảnh</label>
+                            <input type="file" class="form-control" id="imageInput" name="images" accept="image/*"
+                                   multiple>
+                        </div>
+                        <div id="imagePreview" style="display: flex; gap: 10px; margin-top: 15px;">
+                            <div class="image-wrapper" th:each="img : ${imageUrls}">
+                                <img th:src="@{'/uploadFile/' + ${img.link}}" alt="Ảnh đã lưu"
+                                     style="width: 100%; height: 100%;margin-left: 15px; object-fit: cover;">
+                                <button type="button" class="remove-btn" onclick="removeOldImage(this)">×</button>
+                            </div>
+                        </div>
+
+
+                        <input type="hidden" name="deletedImages" id="deletedImages">
+
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    <button type="button" class="btn btn-secondary ms-2" onclick="resetForm()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:if="${message}" id="flash-message" th:data-message="${message}"></div>
+
+<script>
+    const imageInput = document.getElementById("imageInput");
+    const imagePreview = document.getElementById("imagePreview");
+
+    let removedImages = [];
+
+    document.addEventListener("DOMContentLoaded", function () {
+        window.resetForm = function () {
+            location.reload();
+        };
+
+        const flashMessage = document.getElementById("flash-message");
+        if (flashMessage) {
+            const message = flashMessage.getAttribute("data-message");
+            if (message) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thông báo',
+                    text: message,
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        const moneyInputs = document.querySelectorAll(".money-input");
+
+        moneyInputs.forEach(input => {
+            input.addEventListener("input", function () {
+                let value = this.value.replace(/\D/g, "");
+                if (value) {
+                    this.value = Number(value).toLocaleString("vi-VN");
+                } else {
+                    this.value = "";
+                }
+            });
+        });
+
+
+
+        let selectedFiles = [];
+
+        imageInput.addEventListener("change", function (event) {
+            const files = Array.from(event.target.files);
+
+            if (files.length === 0) {
+                imagePreview.style.display = "none";
+            } else {
+                imagePreview.style.display = "flex";
+            }
+
+            files.forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const wrapper = document.createElement("div");
+                    wrapper.classList.add("image-wrapper");
+
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.classList.add("remove-btn");
+                    removeBtn.innerHTML = "&times;";
+                    removeBtn.onclick = function () {
+                        wrapper.remove();
+                        const fileIndex = selectedFiles.findIndex(f => f.name === file.name);
+                        if (fileIndex > -1) {
+                            selectedFiles.splice(fileIndex, 1);
+                        }
+
+                        checkAndHideImagePreview();
+                        updateFileInput(selectedFiles);
+                    };
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    imagePreview.appendChild(wrapper);
+
+                    selectedFiles.push(file);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            updateFileInput(selectedFiles);
+
+            function updateFileInput(updatedFiles) {
+                const dataTransfer = new DataTransfer();
+                updatedFiles.forEach(file => dataTransfer.items.add(file));
+                imageInput.files = dataTransfer.files;
+            }
+        });
+
+
+
+
+    });
+
+    function checkAndHideImagePreview() {
+        if (imagePreview.children.length === 0) {
+            imagePreview.style.display = "none";
+        }
+    }
+    function removeOldImage(button) {
+        const wrapper = button.closest(".image-wrapper");
+        const imgUrl = wrapper.getAttribute("data-url");
+
+        wrapper.remove();
+
+        removedImages.push(imgUrl);
+
+        document.getElementById("deletedImages").value = removedImages.join(",");
+        checkAndHideImagePreview();
+    }
+
+</script>
+
+
+</body>
+</html>
