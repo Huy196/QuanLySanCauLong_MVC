@@ -1,6 +1,7 @@
 package com.example.quanlysancaulong.model;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,6 +25,8 @@ public class Club {
     private LocalDateTime create_at;
 
     private String cover_image;
+    private Time open_time;
+    private Time close_time;
 
     public String getCover_image() {
         return cover_image;
@@ -33,7 +36,7 @@ public class Club {
         this.cover_image = cover_image;
     }
 
-    public Club(int club_id, User user, String name, String type, String address, String image, String status, String link_file, LocalDateTime create_at, String cover_image) {
+    public Club(int club_id, User user, String name, String type, String address, String image, String status, String link_file, LocalDateTime create_at, String cover_image, Time open_time, Time close_time) {
         this.club_id = club_id;
         this.user = user;
         this.name = name;
@@ -44,6 +47,24 @@ public class Club {
         this.link_file = link_file;
         this.create_at = create_at;
         this.cover_image = cover_image;
+        this.open_time = open_time;
+        this.close_time = close_time;
+    }
+
+    public Time getOpen_time() {
+        return open_time;
+    }
+
+    public void setOpen_time(Time open_time) {
+        this.open_time = open_time;
+    }
+
+    public Time getClose_time() {
+        return close_time;
+    }
+
+    public void setClose_time(Time close_time) {
+        this.close_time = close_time;
     }
 
     public Club() {
@@ -145,6 +166,9 @@ public class Club {
                 ", status='" + status + '\'' +
                 ", link_file='" + link_file + '\'' +
                 ", create_at=" + create_at +
+                ", cover_image='" + cover_image + '\'' +
+                ", open_time=" + open_time +
+                ", close_time=" + close_time +
                 '}';
     }
 }

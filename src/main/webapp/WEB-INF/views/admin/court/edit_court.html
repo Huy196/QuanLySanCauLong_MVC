@@ -107,10 +107,12 @@
                 </a>
             </div>
 
-            <form th:action="@{/court/updateCourt}" th:object="${court}" method="post" enctype="multipart/form-data"
+            <form th:action="@{/court/updateCourt}" id="myForm" th:object="${court}" method="post" enctype="multipart/form-data"
                   class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh;font-size: 1.4em"
                   onsubmit="return validateForm()">
                 <input type="hidden" th:field="*{court_id}"/>
+                <input type="hidden" th:field="*{club.club_id}"/>
+                <input type="hidden" th:field="*{user.user_id}"/>
                 <div style="display: flex">
                     <div style="width: 65vh;height: 62vh">
                         <div class="mb-3">
@@ -148,16 +150,19 @@
                             <table class="table table-bordered">
                                 <thead class="table-light">
                                 <tr>
-                                    <th>Khung giờ</th>
+                                    <th>Khung giờ(phút)</th>
                                     <th>Giá (VNĐ)</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td th:text="*{time_frame + 'p'}" style="text-align: center"></td>
+                                    <td style="text-align: center;">
+                                        <input type="number" min="1" th:field="*{time_frame}" class="form-control"/>
+                                    </td>
+
                                     <td>
                                         <input type="text" class="form-control money-input" min="0" id="price"
-                                               th:value="${formatPrice}" name="price" required>
+                                               th:field="*{price}" name="price" required>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -165,20 +170,19 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Chọn ảnh</label>
-                            <input type="file" class="form-control" id="imageInput" name="images" accept="image/*"
+                            <input type="file" class="form-control" id="imageInput" name="imageFile" accept="image/*"
                                    multiple>
                         </div>
                         <div id="imagePreview" style="display: flex; gap: 10px; margin-top: 15px;">
                             <div class="image-wrapper" th:each="img : ${imageUrls}">
                                 <img th:src="@{'/uploadFile/' + ${img.link}}" alt="Ảnh đã lưu"
                                      style="width: 100%; height: 100%;margin-left: 15px; object-fit: cover;">
+
+                                <input type="hidden" name="oldImageNames" th:value="${img.image_id}"
+                                       id="oldImageInput[[${iterStat.index}]]">
                                 <button type="button" class="remove-btn" onclick="removeOldImage(this)">×</button>
                             </div>
                         </div>
-
-
-                        <input type="hidden" name="deletedImages" id="deletedImages">
-
                     </div>
                 </div>
                 <div class="text-center mt-4">
@@ -196,7 +200,15 @@
     const imageInput = document.getElementById("imageInput");
     const imagePreview = document.getElementById("imagePreview");
 
-    let removedImages = [];
+    function formatMoneyInput(input) {
+        let value = input.value.replace(/[^0-9]/g, "");
+        if (value) {
+            input.value = Number(value).toLocaleString("vi-VN");
+        } else {
+            input.value = "";
+        }
+    }
+
 
     document.addEventListener("DOMContentLoaded", function () {
         window.resetForm = function () {
@@ -219,16 +231,36 @@
         const moneyInputs = document.querySelectorAll(".money-input");
 
         moneyInputs.forEach(input => {
-            input.addEventListener("input", function () {
-                let value = this.value.replace(/\D/g, "");
-                if (value) {
-                    this.value = Number(value).toLocaleString("vi-VN");
-                } else {
-                    this.value = "";
-                }
-            });
+            formatMoneyInput(input);
         });
 
+        moneyInputs.forEach(input => {
+            input.addEventListener("input", function (e) {
+                let cursorPosition = this.selectionStart;
+                let originalLength = this.value.length;
+
+                let value = this.value.replace(/[^\d]/g, "");
+
+                if (!value) {
+                    this.value = "";
+                    return;
+                }
+
+                let formattedValue = Number(value).toLocaleString("vi-VN");
+
+                this.value = formattedValue;
+
+                let newLength = formattedValue.length;
+                cursorPosition = cursorPosition + (newLength - originalLength);
+
+                this.setSelectionRange(cursorPosition, cursorPosition);
+            });
+        });
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            moneyInputs.forEach(input => {
+                input.value = input.value.replace(/\./g, "");
+            });
+        });
 
 
         let selectedFiles = [];
@@ -256,13 +288,15 @@
                     removeBtn.innerHTML = "&times;";
                     removeBtn.onclick = function () {
                         wrapper.remove();
+
                         const fileIndex = selectedFiles.findIndex(f => f.name === file.name);
                         if (fileIndex > -1) {
                             selectedFiles.splice(fileIndex, 1);
                         }
 
+                        updateFileInput();
                         checkAndHideImagePreview();
-                        updateFileInput(selectedFiles);
+
                     };
 
                     wrapper.appendChild(img);
@@ -270,22 +304,17 @@
                     imagePreview.appendChild(wrapper);
 
                     selectedFiles.push(file);
+                    updateFileInput()
                 };
                 reader.readAsDataURL(file);
             });
-
-            updateFileInput(selectedFiles);
-
-            function updateFileInput(updatedFiles) {
-                const dataTransfer = new DataTransfer();
-                updatedFiles.forEach(file => dataTransfer.items.add(file));
-                imageInput.files = dataTransfer.files;
-            }
         });
-
-
-
-
+        function updateFileInput() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            imageInput.files = dataTransfer.files;
+            console.log(selectedFiles)
+        }
     });
 
     function checkAndHideImagePreview() {
@@ -293,20 +322,20 @@
             imagePreview.style.display = "none";
         }
     }
+
     function removeOldImage(button) {
         const wrapper = button.closest(".image-wrapper");
-        const imgUrl = wrapper.getAttribute("data-url");
+        const hiddenInput = wrapper.querySelector("input[type='hidden']");
+
+        if (hiddenInput) {
+            hiddenInput.remove();
+        }
 
         wrapper.remove();
 
-        removedImages.push(imgUrl);
-
-        document.getElementById("deletedImages").value = removedImages.join(",");
         checkAndHideImagePreview();
     }
 
 </script>
-
-
 </body>
 </html>

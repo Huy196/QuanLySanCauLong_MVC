@@ -53,15 +53,20 @@ public class LoginController {
     @PostMapping("account")
     public String loginAccount(Model model, @ModelAttribute("user") User user, HttpSession session) {
         User user1 = iLoginService.checkAccount(user);
+
+        userService.findByIdUser(user1.getUser_id());
+        Club club = clubService.findClubByUserId(user1.getUser_id());
+
         if (user1 != null) {
+            session.setAttribute("userId", user1.getUser_id());
+
             if (user1.getRole() == 1) {
-                session.setAttribute("userId", user1.getUser_id());
                 return "home_user";
             } else if (user1.getRole() == 0) {
                 return "admin/home_admin";
             }else if (user1.getRole() == 2){
-                userService.findByIdUser(user1.getUser_id());
-                Club club = clubService.findClubByUserId(user1.getUser_id());
+                session.setAttribute("clubId",club.getClub_id());
+
                 model.addAttribute("user",user1);
                 model.addAttribute("club",club);
                 return "admin/home_club";
