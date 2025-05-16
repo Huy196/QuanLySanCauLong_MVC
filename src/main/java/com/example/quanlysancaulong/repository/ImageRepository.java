@@ -12,9 +12,4 @@ import java.util.List;
 public interface ImageRepository extends JpaRepository<Image, Integer> {
     @Query("SELECT c FROM Image c WHERE c.court.court_id = :courtId")
     List<Image> findAllByCourtId(@Param("courtId") int courtId);
-
-
-    @Query("DELETE FROM Image i WHERE i.image_id = :image_id")
-    void deleteByCourtId(@Param("image_id") Integer courtId);
-
 }

@@ -17,8 +17,8 @@ public class ImageService implements IImageService{
     }
 
     @Override
-    public void deleteImage(int court_id) {
-        imageRepository.deleteByCourtId(court_id);
+    public void deleteImage(int image_id) {
+        imageRepository.deleteById(image_id);
     }
 
     @Override
