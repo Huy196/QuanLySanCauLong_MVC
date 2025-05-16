@@ -3,32 +3,33 @@ package com.example.quanlysancaulong.controller;
 import com.example.quanlysancaulong.model.Club;
 import com.example.quanlysancaulong.model.Court;
 import com.example.quanlysancaulong.model.Image;
-import com.example.quanlysancaulong.service.IClubService;
-import com.example.quanlysancaulong.service.ICourtService;
-import com.example.quanlysancaulong.service.IImageService;
-import com.example.quanlysancaulong.service.IUserService;
+import com.example.quanlysancaulong.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Controller
 @RequestMapping("court")
 public class CourtController {
     @Autowired
+    private UploadFileService uploadFileService;
+
+    @Autowired
     private IImageService iImageService;
+
     @Autowired
     private ICourtService iCourtService;
 
@@ -70,19 +71,56 @@ public class CourtController {
                                    @RequestParam("court_id") int court_id) {
         Club club = clubService.findClubById(club_id);
         Court court = iCourtService.findByIdCourt(court_id);
-
-        DecimalFormat numberFormat = new DecimalFormat("#,###");
-        String formatPrice = numberFormat.format(court.getPrice());
-
-
         List<Image> imageUrls = iImageService.findAllImage(court_id);
 
-        model.addAttribute("club",club);
-        model.addAttribute("imageUrls",imageUrls);
-        model.addAttribute("court",court);
-        model.addAttribute("formatPrice",formatPrice);
+        model.addAttribute("club", club);
+        model.addAttribute("imageUrls", imageUrls);
+        model.addAttribute("court", court);
 
         return "admin/court/edit_court";
     }
 
+    @PostMapping("updateCourt")
+    private String updateCourt(Model model,
+                               @ModelAttribute("court") Court court,
+                               @RequestParam("imageFile") MultipartFile[] newFiles,
+                               @RequestParam(value = "oldImageNames", required = false) String[] image_id,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) throws IOException {
+        Integer userId = (Integer) session.getAttribute("userId");
+
+        if (court.getCourt_id() == 0) {
+
+            court.getUser().setUser_id(userId);
+
+            iCourtService.updateCourt(court);
+            return "";
+
+        } else {
+            iCourtService.updateCourt(court);
+
+            List<Image> images = iImageService.findAllImage(court.getCourt_id());
+
+            Set<String> validIds = new HashSet<>(Arrays.asList(image_id));
+
+            for (Image image : images) {
+                String idStr = String.valueOf(image.getImage_id());
+                if (!validIds.contains(idStr)) {
+                    iImageService.deleteImage(image.getImage_id());
+                }
+            }
+
+        }
+
+        for (MultipartFile file : newFiles) {
+            if (!file.isEmpty()) {
+                String fileName = uploadFileService.uploadFile(file);
+                Court court1 = iCourtService.findByIdCourt(court.getCourt_id());
+                iImageService.saveImage(fileName, court1);
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("message", "Cập nhật sân thành công!");
+        return "redirect:/court/editCourt?club_id=" + court.getClub().getClub_id() + "&court_id=" + court.getCourt_id();
+    }
 }
