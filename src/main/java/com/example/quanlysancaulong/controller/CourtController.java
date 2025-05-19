@@ -66,9 +66,9 @@ public class CourtController {
     }
 
     @GetMapping("editCourt")
-    private String showFormEditCou(Model model,
-                                   @RequestParam("club_id") int club_id,
-                                   @RequestParam("court_id") int court_id) {
+    private String showFormEditCourt(Model model,
+                                     @RequestParam("club_id") int club_id,
+                                     @RequestParam("court_id") int court_id) {
         Club club = clubService.findClubById(club_id);
         Court court = iCourtService.findByIdCourt(court_id);
         List<Image> imageUrls = iImageService.findAllImage(court_id);
@@ -78,6 +78,22 @@ public class CourtController {
         model.addAttribute("court", court);
 
         return "admin/court/edit_court";
+    }
+
+    @GetMapping("detailCourt")
+    private String showFormDetailCourt(Model model,
+                                       @RequestParam("club_id") int club_id,
+                                       @RequestParam("court_id") int court_id) {
+        Club club = clubService.findClubById(club_id);
+
+        Court court = iCourtService.findByIdCourt(court_id);
+        List<Image> imageUrls = iImageService.findAllImage(court_id);
+
+        model.addAttribute("club", club);
+        model.addAttribute("imageUrls", imageUrls);
+        model.addAttribute("court", court);
+
+        return "admin/court/detail_court";
     }
 
     @PostMapping("updateCourt")

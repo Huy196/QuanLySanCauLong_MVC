@@ -6,7 +6,6 @@ import com.example.quanlysancaulong.service.UploadFileService;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,13 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -40,7 +34,7 @@ public class ClubController {
 
     @GetMapping("getAllClub")
     public ModelAndView showAllClub(@RequestParam(defaultValue = "") String search, @PageableDefault(6) Pageable pageable) {
-        ModelAndView modelAndView = new ModelAndView("admin/list_club");
+        ModelAndView modelAndView = new ModelAndView("admin/club/list_club");
         Page<Club> clubs = null;
         if (!search.isEmpty()) {
             clubs = iClubService.findAllClubByName(pageable, search);
@@ -55,7 +49,7 @@ public class ClubController {
 
     @GetMapping("showAllNewClub")
     public ModelAndView showAllNewClub(@RequestParam(defaultValue = "") String search, @PageableDefault(6) Pageable pageable) {
-        ModelAndView modelAndView = new ModelAndView("admin/list_club");
+        ModelAndView modelAndView = new ModelAndView("admin/club/list_club");
         Page<Club> clubs = null;
         if (!search.isEmpty()) {
             clubs = iClubService.findAllClubByName(pageable, search);
@@ -85,7 +79,7 @@ public class ClubController {
             return "admin/edit_club_manage";
         }else{
             model.addAttribute("club", club);
-            return "admin/edit_club";
+            return "admin/club/edit_club";
 
         }
     }
@@ -151,13 +145,13 @@ public class ClubController {
     public String showDetailClub(Model model, @RequestParam("id") int id) {
         Club club = iClubService.findClubById(id);
         model.addAttribute("club", club);
-        return "admin/detail_club";
+        return "admin/club/detail_club";
     }
 
     @GetMapping("showAddClub")
     public String showAddClub(Model model) {
         model.addAttribute("club", new Club());
-        return "admin/add_club";
+        return "admin/club/add_club";
     }
 
     @GetMapping("/download")

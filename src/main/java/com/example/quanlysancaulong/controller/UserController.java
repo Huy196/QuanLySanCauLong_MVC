@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 
@@ -28,7 +27,7 @@ public class UserController {
 
     @GetMapping("getAllUser")
     public ModelAndView showAllUser(@RequestParam(defaultValue = "") String search, @PageableDefault(6) Pageable pageable) {
-        ModelAndView modelAndView = new ModelAndView("admin/list_user");
+        ModelAndView modelAndView = new ModelAndView("admin/user/list_user");
         Page<User> users;
         if (!search.isEmpty()) {
             users = userService.findAllUserByName(pageable, search);
@@ -43,9 +42,12 @@ public class UserController {
 
     @GetMapping("delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
-        userService.deleteUser(id);
-        redirectAttributes.addFlashAttribute("message", "Xóa người dùng thành công!");
-
+        try {
+            userService.deleteUser(id);
+            redirectAttributes.addFlashAttribute("message", "Xóa người dùng thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("messages", "Không thể xóa!");
+        }
         return "redirect:/user/getAllUser";
     }
 
@@ -53,7 +55,7 @@ public class UserController {
     public String showInterfaceEditUser(Model model, @RequestParam("id") Integer id) {
         User user1 = userService.findUserById(id);
         model.addAttribute("user", user1);
-        return "admin/edit_user";
+        return "admin/user/edit_user";
     }
 
     @PostMapping("/updateUser")
@@ -97,6 +99,6 @@ public class UserController {
         User user = new User();
         user.setImage("default-avatar.jpg");
         model.addAttribute("user",user);
-        return "admin/add_user";
+        return "admin/user/add_user";
     }
 }

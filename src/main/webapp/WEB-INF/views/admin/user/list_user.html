@@ -3,7 +3,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="../js/logout.js"></script>
+<script src="../../js/logout.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>List User</title>
@@ -99,6 +99,8 @@
 </div>
 
 <div th:if="${message}" id="flash-message" th:data-message="${message}"></div>
+<div th:if="${messages}" id="flash-messages" th:data-message="${messages}"></div>
+
 </body>
 </html>
 <style>
@@ -138,7 +140,7 @@
                     cancelButtonColor: "#3085d6"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = `/user/delete/${userId}`;
+                        window.location.href = `delete/${userId}`;
                     }
                 });
             });
@@ -152,6 +154,19 @@
             Swal.fire({
                 title: message,
                 icon: "success",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const flashMessageElement = document.getElementById("flash-messages");
+        if (flashMessageElement) {
+            const message = flashMessageElement.dataset.message;
+            Swal.fire({
+                title: message,
+                icon: "error",
                 timer: 2000,
                 showConfirmButton: false
             });

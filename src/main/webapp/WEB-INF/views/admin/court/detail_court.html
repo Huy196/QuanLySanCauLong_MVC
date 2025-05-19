@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sân</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+
+        .header {
+            width: 100%;
+            margin-left: 10px;
+        }
+
+        input.form-control,
+        select.form-select,
+        textarea.form-control {
+            height: 50px;
+            font-size: 1.1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        img {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 5px;
+        }
+
+        .form-container {
+            max-width: 160vh;
+            height: 77vh;
+            overflow-y: auto;
+            padding: 25px;
+            font-size: 1.1rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .form-section .mb-3 {
+            margin-bottom: 20px;
+        }
+
+        form input[type="file"] {
+            font-size: 1.1rem;
+            padding: 10px;
+        }
+
+        #imagePreview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+
+
+    </style>
+
+</head>
+<body>
+<div style="display: flex; padding: 15px;">
+    <!-- Sidebar -->
+    <div class="nav-3" id="nav-3">
+        <nav th:replace="fragments/nav3_club :: footer"></nav>
+    </div>
+
+    <div class="header">
+        <header th:replace="fragments/header_club :: header"></header>
+
+        <div class="container mt-4">
+            <h2 class="text-center mb-4">Chi tiết sân</h2>
+            <div style="margin-top: -20px">
+                <a th:href="@{'/court/showAllCourt?club_id=' + ${club.club_id} + '&court_id=' + ${court.court_id}}">
+                    <i class="bi bi-arrow-bar-left"></i> Quay lại
+                </a>
+            </div>
+
+            <div class="mx-auto form-container border rounded p-4 shadow" style="font-size: 1.1rem;">
+                <div class="d-flex gap-5 info-flex">
+                    <!-- Cột trái -->
+                    <div style="flex: 1;font-size: 2em">
+                        <div class="mb-3">
+                            <label class="form-label">Tên sân:</label>
+                            <div class="readonly-box" th:text="${court.name}">Tên sân</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Loại sân:</label>
+                            <div class="readonly-box" th:text="${court.type}">Loại sân</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mô tả:</label>
+                            <div class="readonly-box" th:text="${court.description}">Mô tả sân</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Trạng thái:</label>
+                            <div class="readonly-box"
+                                 th:text="${court.status}"
+                                 th:classappend="${court.status == 'Đang hoạt động'} ? ' text-success fw-bold' : ' text-danger fw-bold'">
+                                Trạng thái
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Cột phải -->
+                    <div style="flex: 1;height: 70vh">
+                        <div class="mb-3">
+                            <label class="form-label">Bảng giá thuê theo khung giờ</label>
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Khung giờ (phút)</th>
+                                    <th>Giá (VNĐ)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="${court.time_frame}"> </td>
+                                    <td th:text="${#numbers.formatDecimal(court.price, 0, 'COMMA', 0, 'POINT')}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Hình ảnh</label>
+                            <div id="imagePreview">
+                                <div class="image-wrapper" th:each="img : ${imageUrls}">
+                                    <img th:src="@{'/uploadFile/' + ${img.link}}" alt="Ảnh đã lưu">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
