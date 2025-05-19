@@ -54,9 +54,6 @@ public class LoginController {
     public String loginAccount(Model model, @ModelAttribute("user") User user, HttpSession session) {
         User user1 = iLoginService.checkAccount(user);
 
-        userService.findByIdUser(user1.getUser_id());
-        Club club = clubService.findClubByUserId(user1.getUser_id());
-
         if (user1 != null) {
             session.setAttribute("userId", user1.getUser_id());
 
@@ -64,17 +61,26 @@ public class LoginController {
                 return "home_user";
             } else if (user1.getRole() == 0) {
                 return "admin/home_admin";
-            }else if (user1.getRole() == 2){
-                session.setAttribute("clubId",club.getClub_id());
-
-                model.addAttribute("user",user1);
-                model.addAttribute("club",club);
-                return "admin/home_club";
+            } else if (user1.getRole() == 2) {
+                Club club = clubService.findClubByUserId(user1.getUser_id());
+                if (club != null) {
+                    session.setAttribute("clubId", club.getClub_id());
+                    model.addAttribute("user", user1);
+                    model.addAttribute("club", club);
+                    return "admin/home_club";
+                } else {
+                    model.addAttribute("error", "Không tìm thấy club cho user này");
+                    return "login";
+                }
+            } else {
+                model.addAttribute("error", "Quyền truy cập không hợp lệ");
+                return "login";
             }
         }
         session.setAttribute("registration", true);
         return "login";
     }
+
 
     @GetMapping("logout")
     public String logout(HttpSession session) {
