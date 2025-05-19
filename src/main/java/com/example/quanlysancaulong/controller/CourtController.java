@@ -3,6 +3,7 @@ package com.example.quanlysancaulong.controller;
 import com.example.quanlysancaulong.model.Club;
 import com.example.quanlysancaulong.model.Court;
 import com.example.quanlysancaulong.model.Image;
+import com.example.quanlysancaulong.model.User;
 import com.example.quanlysancaulong.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,8 @@ public class CourtController {
 
     @Autowired
     private IClubService clubService;
+    @Autowired
+    private IUserService userService;
 
     @GetMapping("showAllCourt")
     private ModelAndView showAllCourt(@RequestParam(defaultValue = "") String search, @RequestParam("club_id") int club_id, @PageableDefault(6) Pageable pageable) {
@@ -80,6 +83,20 @@ public class CourtController {
         return "admin/court/edit_court";
     }
 
+    @GetMapping("addCourt")
+    private String showFormAddCourt(Model model,
+                                    @RequestParam("club_id") int club_id) {
+        Club club = clubService.findClubById(club_id);
+        Court court = new Court();
+        court.setClub(club);
+
+        model.addAttribute("club", club);
+        model.addAttribute("imageUrls", new Image());
+        model.addAttribute("court", court);
+
+        return "admin/court/add_court";
+    }
+
     @GetMapping("detailCourt")
     private String showFormDetailCourt(Model model,
                                        @RequestParam("club_id") int club_id,
@@ -104,17 +121,16 @@ public class CourtController {
                                HttpSession session,
                                RedirectAttributes redirectAttributes) throws IOException {
         Integer userId = (Integer) session.getAttribute("userId");
+        boolean checkIdUser = court.getCourt_id() == 0;
 
-        if (court.getCourt_id() == 0) {
 
-            court.getUser().setUser_id(userId);
+        if (checkIdUser) {
+            User user = userService.findByIdUser(userId);
+            court.setUser(user);
 
-            iCourtService.updateCourt(court);
-            return "";
-
+            Club club = clubService.findClubById(court.getClub().getClub_id());
+            court.setClub(club);
         } else {
-            iCourtService.updateCourt(court);
-
             List<Image> images = iImageService.findAllImage(court.getCourt_id());
 
             Set<String> validIds = new HashSet<>(Arrays.asList(image_id));
@@ -127,6 +143,8 @@ public class CourtController {
             }
 
         }
+        iCourtService.updateCourt(court);
+
 
         for (MultipartFile file : newFiles) {
             if (!file.isEmpty()) {
@@ -136,7 +154,12 @@ public class CourtController {
             }
         }
 
-        redirectAttributes.addFlashAttribute("message", "Cập nhật sân thành công!");
-        return "redirect:/court/editCourt?club_id=" + court.getClub().getClub_id() + "&court_id=" + court.getCourt_id();
+        if (checkIdUser) {
+            redirectAttributes.addFlashAttribute("message", "Thêm mới sân thành công!");
+            return "redirect:/court/addCourt?club_id=" + court.getClub().getClub_id();
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Cập nhật sân thành công!");
+            return "redirect:/court/editCourt?club_id=" + court.getClub().getClub_id() + "&court_id=" + court.getCourt_id();
+        }
     }
 }

@@ -100,14 +100,15 @@
         <header th:replace="fragments/header_club :: header"></header>
 
         <div class="container mt-4">
-            <h2 class="text-center mb-4">Chỉnh sửa sân cầu</h2>
+            <h2 class="text-center mb-4">Thêm mới sân</h2>
             <div style="margin-top: -20px">
                 <a th:href="@{'/court/showAllCourt?club_id=' + ${club.club_id}}">
                     <i class="bi bi-arrow-bar-left"></i> Quay lại
                 </a>
             </div>
 
-            <form th:action="@{/court/updateCourt}" id="myForm" th:object="${court}" method="post" enctype="multipart/form-data"
+            <form th:action="@{/court/updateCourt}" id="myForm" th:object="${court}" method="post"
+                  enctype="multipart/form-data"
                   class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh;font-size: 1.4em"
                   onsubmit="return validateForm()">
                 <input type="hidden" th:field="*{court_id}"/>
@@ -173,16 +174,7 @@
                             <input type="file" class="form-control" id="imageInput" name="imageFile" accept="image/*"
                                    multiple>
                         </div>
-                        <div id="imagePreview" style="display: flex; gap: 10px; margin-top: 15px;">
-                            <div class="image-wrapper" th:each="img : ${imageUrls}">
-                                <img th:src="@{'/uploadFile/' + ${img.link}}" alt="Ảnh đã lưu"
-                                     style="width: 100%; height: 100%;margin-left: 15px; object-fit: cover;">
-
-                                <input type="hidden" name="oldImageNames" th:value="${img.image_id}"
-                                       id="oldImageInput[[${iterStat.index}]]">
-                                <button type="button" class="remove-btn" onclick="removeOldImage(this)">×</button>
-                            </div>
-                        </div>
+                        <div id="imagePreview" style="display: none; gap: 10px; margin-top: 15px;"></div>
                     </div>
                 </div>
                 <div class="text-center mt-4">
@@ -309,6 +301,7 @@
                 reader.readAsDataURL(file);
             });
         });
+
         function updateFileInput() {
             const dataTransfer = new DataTransfer();
             selectedFiles.forEach(file => dataTransfer.items.add(file));
@@ -323,17 +316,46 @@
         }
     }
 
-    function removeOldImage(button) {
-        const wrapper = button.closest(".image-wrapper");
-        const hiddenInput = wrapper.querySelector("input[type='hidden']");
+    function validateForm() {
+        const nameInput = document.getElementById('name');
+        const priceInput = document.getElementById('price');
+        const timeFrameInput = document.querySelector('input[th\\:field="*{time_frame}"]');
+        const descriptionInput = document.getElementById('description');
 
-        if (hiddenInput) {
-            hiddenInput.remove();
+        const nameRegex = /^[a-zA-Z0-9\s]{3,}$/;
+        const priceRegex = /^[0-9]+$/;
+        const timeFrameRegex = /^[1-9][0-9]*$/;
+        const descriptionMaxLength = 300;
+
+        if (!timeFrameRegex.test(timeFrameInput.value.trim())) {
+            showError('Khung giờ phải là số nguyên dương.');
+            timeFrameInput.focus();
+            return false;
         }
 
-        wrapper.remove();
+        const priceValue = priceInput.value.replace(/\./g, '');
+        if (!priceRegex.test(priceValue)) {
+            showError('Giá phải là số nguyên không âm.');
+            priceInput.focus();
+            return false;
+        }
 
-        checkAndHideImagePreview();
+        if (descriptionInput.value.length > descriptionMaxLength) {
+            showError(`Mô tả không được dài quá ${descriptionMaxLength} ký tự.`);
+            descriptionInput.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    function showError(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: message,
+            confirmButtonText: 'OK'
+        });
     }
 
 </script>

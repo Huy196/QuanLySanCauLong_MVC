@@ -32,8 +32,4 @@ public class CourtService implements ICourtService{
     public Court updateCourt(Court court) {
         return courtRepository.save(court);
     }
-
-
-
-
 }
