@@ -2,11 +2,8 @@ package com.example.quanlysancaulong.repository;
 
 import com.example.quanlysancaulong.model.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ImageRepository extends JpaRepository<Image, Integer> {

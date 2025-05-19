@@ -17,7 +17,7 @@
 
 
         <div style="text-align: center;padding: 10px">
-            <h1>Danh sách các sân đấu</h1>
+            <h1>Danh sách sân</h1>
         </div>
 
 
@@ -64,10 +64,11 @@
                     <td th:text="*{type}"></td>
                     <td th:text="*{description}"></td>
 
-                    <td th:text="*{status}"></td>
-
+                    <td th:text="*{status}"
+                        th:classappend="${court.status == 'Đang hoạt động'} ? 'text-success' : 'text-danger'"></td>
                     <td>
-                        <a th:href="@{'/court/editCourt?club_id=' + ${club.club_id} + '&court_id=' + ${court.court_id}}" class="btn btn-outline-primary btn-sm"
+                        <a th:href="@{'/court/editCourt?club_id=' + ${club.club_id} + '&court_id=' + ${court.court_id}}"
+                           class="btn btn-outline-primary btn-sm"
                            title="Sửa">
                             <i class="fas fa-edit"></i>
                         </a>
@@ -75,7 +76,8 @@
                            th:data-id="${court.court_id}" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
                         </a>
-                        <a th:href="@{'/club/detailClub?id=' + ${court.court_id}}" class="btn btn-outline-info btn-sm" title="Xem chi tiết">
+                        <a th:href="@{'/court/detailCourt?club_id=' + ${club.club_id} + '&court_id=' + ${court.court_id}}" class="btn btn-outline-info btn-sm"
+                           title="Xem chi tiết">
                             <i class="fas fa-eye"></i>
                         </a>
                     </td>
