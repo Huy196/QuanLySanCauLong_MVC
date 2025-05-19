@@ -38,7 +38,7 @@
                             type="submit">Tìm kiếm
                     </button>
                 </form>
-                <a th:href="@{'/court/showAddCourt'}">
+                <a th:href="@{'/court/addCourt?club_id=' + ${club.club_id}}">
                     <button class="btn btn-success btn-sm"
                             style="border-radius: 15px;width: 200px;height: 40px;margin-left: 200px;font-size: 18px">
                         Thêm sân đấu
