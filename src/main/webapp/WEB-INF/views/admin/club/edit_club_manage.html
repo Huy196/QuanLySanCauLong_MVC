@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../js/logout.js"></script>
+    <script src="../../js/logout.js"></script>
     <style>
         .header {
             width: 100%;
@@ -82,9 +82,7 @@
 
         <div class="container mt-4">
             <h2 class="text-center mb-4">Thông tin CLB</h2>
-
-
-            <form th:action="@{club/updateClub}" th:object="${club}" method="post" enctype="multipart/form-data"
+            <form th:action="@{updateClub}" th:object="${club}" method="post" enctype="multipart/form-data"
                   class="mx-auto form-container border rounded p-4 shadow" style="height: 75vh" onsubmit="return validateForm()">
 
                 <input type="hidden" th:field="*{club_id}"/>
@@ -146,7 +144,9 @@
                             <label for="link_file" class="form-label">Chọn file hợp đồng (bắt buộc là file Excel hoặc Word: .xlsx, .xls, .doc, .docx)</label>
                             <input type="file" id="link_file" name="linkFile" class="form-control" onchange="displayFileName(this)">
                             <div id="file-name-display" style="margin-top: 10px;">
-                                <span>File hiện tại: <b th:text="${club.link_file}">Chưa có file</b></span>
+                                <label class="form-label">File hợp đồng</label>
+                                <a th:href="@{'download?filename=' + ${club.link_file}}"
+                                   th:text="${club.link_file}">Chưa có file</a>
                             </div>
                         </div>
 

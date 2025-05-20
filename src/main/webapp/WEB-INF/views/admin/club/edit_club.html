@@ -150,7 +150,9 @@
                             <label for="link_file" class="form-label">Chọn file hợp đồng (bắt buộc là file Excel hoặc Word: .xlsx, .xls, .doc, .docx)</label>
                             <input type="file" id="link_file" name="linkFile" class="form-control" onchange="displayFileName(this)">
                             <div id="file-name-display" style="margin-top: 10px;">
-                                <span>File hiện tại: <b th:text="${club.link_file}">Chưa có file</b></span>
+                                <label class="form-label">File hợp đồng</label>
+                                <a th:href="@{'download?filename=' + ${club.link_file}}"
+                                   th:text="${club.link_file}">Chưa có file</a>
                             </div>
                         </div>
 
