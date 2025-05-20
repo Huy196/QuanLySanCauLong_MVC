@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,10 +75,10 @@ public class ClubController {
     @GetMapping("editClub")
     public String showFromEditClub(Model model, @RequestParam("id") int id) {
         Club club = iClubService.findClubById(id);
-        if (club.getUser().getRole() == 2){
+        if (club.getUser().getRole() == 2) {
             model.addAttribute("club", club);
-            return "admin/edit_club_manage";
-        }else{
+            return "admin/club/edit_club_manage";
+        } else {
             model.addAttribute("club", club);
             return "admin/club/edit_club";
 
@@ -156,9 +157,9 @@ public class ClubController {
 
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadFile(@RequestParam("filename") String filename) throws IOException {
-        final String UPLOAD_DIR = "D:\\IdeaProjects\\QuanLySanCauLong\\src\\main\\webapp\\uploadFile\\";
+        final String UPLOAD_DIR = "D:\\IdeaProjects\\QuanLySanCauLong\\src\\main\\resources\\static\\uploadFile";
 
-        Path path = Paths.get(UPLOAD_DIR + filename);
+        Path path = Paths.get(UPLOAD_DIR, filename);
         File file = path.toFile();
 
         if (!file.exists()) {
@@ -169,7 +170,8 @@ public class ClubController {
 
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
 }
