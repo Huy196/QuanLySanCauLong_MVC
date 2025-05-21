@@ -1,0 +1,53 @@
+<body>
+<div th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm sticky-top py-3">
+
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold fs-4" href="#">🏸 Sân Cầu Lông Pro</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse fs-5 justify-content-center" id="mainNavbar">
+                <ul class="navbar-nav" style="margin: auto">
+                    <li class="nav-item mx-2"><a class="nav-link active" href="#">Trang chủ</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link" href="#">Dịch vụ</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link" href="#">Đặt sân</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link" href="#">Liên hệ</a></li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown" th:if="${session.userId != null}">
+                        <a
+                                class="btn btn-light text-success px-3 dropdown-toggle"
+                                href="#"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                style="display: inline-block;"
+                        >
+                            <i class="bi bi-gear-fill"></i> Cài đặt
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
+                            <li><a class="dropdown-item" href="#">Đơn hàng đã đặt</a></li>
+                            <li><a class="dropdown-item" href="#">Đơn hàng đang chờ</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" th:href="@{logout}">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li class="nav-item" th:if="${session.userId == null}">
+                        <a class="nav-link btn btn-light text-success ms-2 px-3" href="/register">Đăng ký</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.userId == null}">
+                        <a class="nav-link btn btn-light text-success ms-2 px-3" href="/login">Đăng nhập</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+</body>
