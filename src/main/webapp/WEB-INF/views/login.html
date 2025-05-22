@@ -188,8 +188,11 @@
             showErrorMessage("Email hoặc số điện thoại không hợp lệ!");
             event.preventDefault();
         }
-
-        if (pass == ""){
+        if (email === ""){
+            showErrorMessage("Email không được để trống");
+            event.preventDefault();
+        }
+        if (pass === ""){
             showErrorMessage("Mật khẩu không được để trống");
             event.preventDefault();
         }

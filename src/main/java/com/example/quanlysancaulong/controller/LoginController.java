@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping("/login")
@@ -53,12 +54,17 @@ public class LoginController {
     @PostMapping("account")
     public String loginAccount(Model model, @ModelAttribute("user") User user, HttpSession session) {
         User user1 = iLoginService.checkAccount(user);
+        List<Club> club_1 = clubService.findAllClubList();
+
+        if (user1 == null){
+            return "user/home_user";
+        }
 
         if (user1 != null) {
             session.setAttribute("userId", user1.getUser_id());
 
             if (user1.getRole() == 1) {
-                return "home_user";
+                return "user/home_user";
             } else if (user1.getRole() == 0) {
                 return "admin/home_admin";
             } else if (user1.getRole() == 2) {
