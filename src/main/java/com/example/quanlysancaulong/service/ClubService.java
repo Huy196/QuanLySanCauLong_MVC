@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ClubService implements IClubService{
     @Autowired
@@ -45,5 +47,10 @@ public class ClubService implements IClubService{
     @Override
     public Club findClubByUserId(int id) {
         return clubRepository.findByUser_UserId(id);
+    }
+
+    @Override
+    public List<Club> findAllClubList() {
+        return clubRepository.findAll();
     }
 }

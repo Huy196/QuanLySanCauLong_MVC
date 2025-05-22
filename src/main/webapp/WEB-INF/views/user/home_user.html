@@ -19,7 +19,92 @@
     <div>
         <div th:replace="fragments/user/secsion_user :: secsion"></div>
     </div>
+    <div>
+
+    </div>
 </div>
 
 </body>
 </html>
+
+<style>
+    #header {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #carouselExampleIndicators {
+        max-width: 100%;
+        height: 100vh;
+        margin: 0 auto;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .carousel-inner,
+    .carousel-item,
+    .carousel-item img {
+        height: 100%;
+    }
+
+    .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    @media (max-width: 768px) {
+        #carouselExampleIndicators {
+            height: 300px;
+        }
+    }
+    .centered-caption {
+        width: 100% ;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        text-align: center;
+        padding: 30px 40px;
+        border-radius: 10px;
+        text-shadow: 4px 4px 8px rgba(0,0,0,0.8);
+    }
+
+    .centered-caption h5 {
+        font-size: 70px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        z-index: 2;
+    }
+
+    .centered-caption p {
+        font-size: 50px;
+        margin: 0;
+        z-index: 2;
+    }
+
+    .btn.btn-light.text-success.px-3.dropdown-toggle {
+        background: none !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .btn.btn-light.text-success.px-3.dropdown-toggle i {
+        color: white !important;
+    }
+    .carousel-caption.centered-caption {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateX(-100px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .carousel-item.active .carousel-caption.centered-caption {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(0);
+    }
+
+</style>

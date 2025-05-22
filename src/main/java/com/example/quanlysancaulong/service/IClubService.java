@@ -5,6 +5,8 @@ import com.example.quanlysancaulong.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface IClubService {
     Page<Club> findAllClub(Pageable pageable);
     Page<Club> findAllNewClub(Pageable pageable);
@@ -18,4 +20,5 @@ public interface IClubService {
     Club saveOrUpdate(Club club);
 
     Club findClubByUserId(int id);
+    List<Club> findAllClubList();
 }
