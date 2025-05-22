@@ -45,13 +45,13 @@ public class CourtController {
 
         Page<Court> courts = null;
 
+        Club club = clubService.findClubById(club_id);
+
         if (!search.isEmpty()) {
             courts = iCourtService.searchNameCourt(search, pageable);
         } else {
-            courts = iCourtService.findAllCourt(pageable);
+            courts = iCourtService.findAllCourtByClub(pageable, club);
         }
-
-        Club club = clubService.findClubById(club_id);
 
         List<String> formattedPrices = new ArrayList<>();
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -161,5 +161,50 @@ public class CourtController {
             redirectAttributes.addFlashAttribute("message", "Cập nhật sân thành công!");
             return "redirect:/court/editCourt?club_id=" + court.getClub().getClub_id() + "&court_id=" + court.getCourt_id();
         }
+    }
+
+
+    @GetMapping("showAllCourtManage")
+    private ModelAndView showAllCourtManage(@RequestParam(defaultValue = "") String search, @PageableDefault(6) Pageable pageable) {
+        ModelAndView modelAndView = new ModelAndView("admin/court/court_manage");
+
+        Page<Court> courts = null;
+
+
+        if (!search.isEmpty()) {
+            courts = iCourtService.searchNameCourt(search, pageable);
+        } else {
+            courts = iCourtService.findAllCourt(pageable);
+        }
+
+        List<String> formattedPrices = new ArrayList<>();
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        for (Court court : courts) {
+            String formattedPrice = currencyFormat.format(court.getPrice());
+            formattedPrices.add(formattedPrice);
+        }
+
+
+        modelAndView.addObject("courts", courts);
+        modelAndView.addObject("search", search);
+        modelAndView.addObject("formattedPrices", formattedPrices);
+        return modelAndView;
+    }
+
+
+    @GetMapping("detailCourtManage")
+    private String showFormDetailCourtManage(Model model,
+                                       @RequestParam("club_id") int club_id,
+                                       @RequestParam("court_id") int court_id) {
+        Club club = clubService.findClubById(club_id);
+
+        Court court = iCourtService.findByIdCourt(court_id);
+        List<Image> imageUrls = iImageService.findAllImage(court_id);
+
+        model.addAttribute("club", club);
+        model.addAttribute("imageUrls", imageUrls);
+        model.addAttribute("court", court);
+
+        return "admin/court/detail_court_manage";
     }
 }

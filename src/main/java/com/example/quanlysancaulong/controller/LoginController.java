@@ -51,7 +51,7 @@ public class LoginController {
         return "sign_in";
     }
 
-    @PostMapping("account")
+    @GetMapping("account")
     public String loginAccount(Model model, @ModelAttribute("user") User user, HttpSession session) {
         User user1 = iLoginService.checkAccount(user);
         List<Club> club_1 = clubService.findAllClubList();

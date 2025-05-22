@@ -40,11 +40,25 @@
 
 
                     <li class="nav-item" th:if="${session.userId == null}">
-                        <a class="nav-link btn btn-light text-success ms-2 px-3" href="/register">Đăng ký</a>
+                        <a class="text-white px-3 fw-bold" href="/register" style="display: inline-block; text-decoration: none;">
+                            Đăng ký
+                        </a>
                     </li>
+                    <span class="text-white">/</span>
+
                     <li class="nav-item" th:if="${session.userId == null}">
-                        <a class="nav-link btn btn-light text-success ms-2 px-3" href="/login">Đăng nhập</a>
+                        <a class="text-white px-3 fw-bold" href="/login" style="display: inline-block; text-decoration: none;">
+                            Đăng nhập
+                        </a>
                     </li>
+                    <span class="text-white">/</span>
+
+                    <li class="nav-item" th:if="${session.userId == null}">
+                        <a class="text-white px-3 fw-bold" href="/login" style="display: inline-block; text-decoration: none;">
+                            Đăng ký mở CLB
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </div>

@@ -1,5 +1,6 @@
 package com.example.quanlysancaulong.repository;
 
+import com.example.quanlysancaulong.model.Club;
 import com.example.quanlysancaulong.model.Court;
 import com.example.quanlysancaulong.model.Image;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,6 @@ import java.util.List;
 public interface CourtRepository extends JpaRepository<Court, Integer> {
     Page<Court> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-
+    Page<Court> findAllByClub(Club club, Pageable pageable);
 
 }
