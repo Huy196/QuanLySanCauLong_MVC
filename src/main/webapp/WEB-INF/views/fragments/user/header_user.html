@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm sticky-top py-3">
 
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold fs-4" href="#">🏸 Sân Cầu Lông Pro</a>
+            <a class="navbar-brand fw-bold fs-4" href="#">🏸Alo booking Huy</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -43,15 +43,17 @@
                         <a class="text-white px-3 fw-bold" href="/register" style="display: inline-block; text-decoration: none;">
                             Đăng ký
                         </a>
+                        <span class="text-white">/</span>
+
                     </li>
-                    <span class="text-white">/</span>
 
                     <li class="nav-item" th:if="${session.userId == null}">
                         <a class="text-white px-3 fw-bold" href="/login" style="display: inline-block; text-decoration: none;">
                             Đăng nhập
                         </a>
+                        <span class="text-white">/</span>
+
                     </li>
-                    <span class="text-white">/</span>
 
                     <li class="nav-item" th:if="${session.userId == null}">
                         <a class="text-white px-3 fw-bold" href="/login" style="display: inline-block; text-decoration: none;">

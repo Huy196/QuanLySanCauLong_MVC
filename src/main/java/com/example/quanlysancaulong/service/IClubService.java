@@ -21,4 +21,5 @@ public interface IClubService {
 
     Club findClubByUserId(int id);
     List<Club> findAllClubList();
+
 }

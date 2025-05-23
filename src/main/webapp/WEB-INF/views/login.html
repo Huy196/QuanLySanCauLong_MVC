@@ -140,7 +140,7 @@
     <h2>Đăng nhập</h2>
     <h3>DQH - Đặt lịch online sân thể thao</h3>
 
-    <form th:action="@{/login/account}" th:object="${user}" id="register-form" method="get">
+    <form th:action="@{/login/account}" th:object="${user}" id="register-form" method="post">
         <div class="form-group">
             <label for="email">Số điện thoại hoặc email</label>
             <input th:field="*{email}" type="text" id="email" placeholder="Nhập số điện thoại hoặc email">
