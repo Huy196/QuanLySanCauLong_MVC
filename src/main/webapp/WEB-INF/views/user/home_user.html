@@ -19,15 +19,178 @@
     <div>
         <div th:replace="fragments/user/secsion_user :: secsion"></div>
     </div>
-    <div>
+    <div class="center my-5 text-center">
+        <h1 class="main-heading">Đặt sân thi đấu trực tuyến</h1>
+        <p class="sub-heading">Nhanh chóng - Tiện lợi - Đảm bảo sân đúng giờ</p>
+        <a class="btn btn-outline-success btn-lg mt-3 px-5 py-2">
+            Đặt sân chất lượng - Uy tín hàng đầu
+        </a>
+    </div>
 
+    <div class="container my-5">
+        <div class="row mx-0">
+            <div class="col-md-2 mb-4">
+                <h5 class="text-success mb-3">Thể loại</h5>
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="type : ${clubTypes}">
+                        <a href="#" class="list-group-item list-group-item-action text-success fw-bold"
+                           th:text="${type}"></a>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="col-md-10">
+                <div class="input-group mb-4">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm CLB..." id="searchInput">
+                    <button class="btn btn-success" type="button" id="searchButton">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-2 g-4" id="clubList">
+                    <div class="col" th:each="club : ${clubs}">
+                        <div class="card h-100 shadow-sm" style="border: 0px">
+                            <div style="width: 100%; height: 150px; overflow: hidden; border-radius: 12px;">
+                                <img th:src="@{'/uploadFile/' + ${club.cover_image}}" alt="Ảnh bìa CLB"
+                                     style="width: 100%; height: 100%; object-fit: cover;">
+                                <button class="btn btn-outline-danger btn-sm favorite-btn"
+                                        type="button" title="Thêm vào yêu thích"
+                                        style="position: absolute; top: 10px; right: 10px; border-radius: 50%; border: 0px; background: white;">
+                                    <i class="bi bi-heart"></i>
+                                </button>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+
+                                <input type="hidden" th:value="${club.club_id}">
+
+                                <div class="me-4"
+                                     style="width: 180px; height: 120px; border-radius: 12px; overflow: hidden; background-color: white; display: flex; align-items: center; justify-content: center;">
+                                    <img class="rounded" alt="Logo CLB"
+                                         style=" max-height: 100%; object-fit: contain;"
+                                         th:src="@{'/uploadFile/' + ${club.image}}">
+                                </div>
+
+
+                                <div class="d-flex justify-content-between align-items-center w-100">
+                                    <div>
+                                        <h5 class="card-title text-success mb-1 fs-5 text-truncate" th:text="${club.name}"></h5>
+                                        <p class="card-text mb-1 fs-6 text-truncate d-flex align-items-center">
+                                            <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                                            <span class="text-truncate" style="max-width: 100%;" th:text="${club.address}"></span>
+                                        </p>
+                                        <p class="card-text mb-1 fs-6">
+                                            <i class="bi bi-clock-fill text-primary me-2"></i>
+                                            <span th:text="${club.open_time}"></span>
+                                            &nbsp;-&nbsp;
+                                            <span th:text="${club.close_time}"></span>
+                                        </p>
+                                        <p class="card-text mb-1 fs-6">
+                                            <i class="bi bi-telephone-fill text-success me-2"></i>
+                                            <span th:text="${club.user.phone}"></span>
+                                        </p>
+                                    </div>
+
+
+                                    <div class="ms-auto text-end" style="padding-right: 10px">
+                                        <a th:href="@{'/clb/' + ${club.club_id}}"
+                                           class="btn btn-outline-success btn-sm fs-5 px-3">Đặt lịch</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
+<div>
+    <div th:replace="fragments/user/bottom_user :: bottom"></div>
+</div>
 </body>
 </html>
 
 <style>
+    #searchInput {
+        height: 48px;
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+    }
+
+    #searchButton {
+        height: 48px;
+        padding: 0 1.5rem;
+        font-size: 1.3rem;
+        border-radius: 0.5rem;
+    }
+
+    #searchButton i {
+        font-size: 1.6rem;
+    }
+
+
+    .text-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 300px;
+        display: block;
+    }
+
+    .input-group {
+        max-width: 750px;
+        margin: 0 auto;
+    }
+
+    @media (min-width: 1400px) {
+        .container {
+            max-width: 1550px;
+        }
+    }
+
+    #searchInput::placeholder {
+        color: #aaa;
+        font-style: italic;
+    }
+
+    .list-group-item a {
+        color: #198754;
+        border: none !important;
+        background-color: transparent;
+    }
+
+    .list-group-item a:hover {
+        text-decoration: underline;
+    }
+
+
+    .main-heading {
+        font-size: 48px;
+        font-weight: 800;
+        color: #198754;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .sub-heading {
+        font-size: 24px;
+        color: #555;
+        margin-top: 10px;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .main-heading {
+            font-size: 32px;
+        }
+
+        .sub-heading {
+            font-size: 18px;
+        }
+    }
+
+
     #header {
         position: sticky;
         top: 0;
@@ -60,8 +223,9 @@
             height: 300px;
         }
     }
+
     .centered-caption {
-        width: 100% ;
+        width: 100%;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -70,7 +234,7 @@
         text-align: center;
         padding: 30px 40px;
         border-radius: 10px;
-        text-shadow: 4px 4px 8px rgba(0,0,0,0.8);
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
     }
 
     .centered-caption h5 {
@@ -96,6 +260,7 @@
     .btn.btn-light.text-success.px-3.dropdown-toggle i {
         color: white !important;
     }
+
     .carousel-caption.centered-caption {
         opacity: 0;
         transform: translate(-50%, -50%) translateX(-100px);
@@ -106,5 +271,33 @@
         opacity: 1;
         transform: translate(-50%, -50%) translateX(0);
     }
+    .favorite-btn:hover,
+    .favorite-btn:hover i {
+        color: red;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 12px;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(189, 148, 148, 0.25);
+        z-index: 2;
+    }
+
 
 </style>
+<script>
+    document.querySelectorAll('.favorite-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            this.querySelector('i').classList.toggle('bi-heart');
+            this.querySelector('i').classList.toggle('bi-heart-fill');
+            this.classList.toggle('favorite-active');
+        });
+    });
+
+</script>

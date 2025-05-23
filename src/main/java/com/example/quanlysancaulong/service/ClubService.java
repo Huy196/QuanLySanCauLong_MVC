@@ -51,6 +51,6 @@ public class ClubService implements IClubService{
 
     @Override
     public List<Club> findAllClubList() {
-        return clubRepository.findAll();
+        return clubRepository.findAllClubLists();
     }
 }
