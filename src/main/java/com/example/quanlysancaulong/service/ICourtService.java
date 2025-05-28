@@ -3,7 +3,6 @@ package com.example.quanlysancaulong.service;
 import com.example.quanlysancaulong.model.Club;
 import com.example.quanlysancaulong.model.Court;
 import com.example.quanlysancaulong.model.Image;
-import com.example.quanlysancaulong.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,5 +18,6 @@ public interface ICourtService {
 
     Court updateCourt(Court court);
 
+    List<Court> findBuIdClubCourt(int club_id);
 
 }
