@@ -40,4 +40,9 @@ public class CourtService implements ICourtService {
     public Court updateCourt(Court court) {
         return courtRepository.save(court);
     }
+
+    @Override
+    public List<Court> findBuIdClubCourt(int club_id) {
+        return courtRepository.findAllByClubId(club_id);
+    }
 }

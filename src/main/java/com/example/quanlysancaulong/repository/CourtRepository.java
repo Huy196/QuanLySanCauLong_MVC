@@ -18,4 +18,7 @@ public interface CourtRepository extends JpaRepository<Court, Integer> {
 
     Page<Court> findAllByClub(Club club, Pageable pageable);
 
+    @Query("SELECT c FROM Court c WHERE c.club.club_id = :clubId")
+    List<Court> findAllByClubId(@Param("clubId") Integer clubId);
+
 }
