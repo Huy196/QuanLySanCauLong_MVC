@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <style>
+        .section-title {
+            font-weight: 700;
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
         #header {
             position: sticky;
             top: 0;
@@ -31,8 +38,8 @@
 
         .image-wrapper {
             position: relative;
-            width: 150px;
-            height: 150px;
+            width: 180px;
+            height: 180px;
         }
 
         .image-wrapper img {
@@ -45,8 +52,7 @@
         #imagePreview {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            max-height: 280px;
+            gap: 33px;
             overflow-y: auto;
             padding: 10px;
             border: 1px solid #ccc;
@@ -68,6 +74,41 @@
             transform: scale(1.03);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
+        .form-container {
+            margin-bottom: 50px;
+        }
+
+        .images-prices-section > div {
+            margin-top: 30px;
+        }
+
+
+        .info-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-content {
+            font-weight: 500;
+        }
+        .club-name {
+            font-size: 3rem;
+            color: #2c3e50;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
 
     </style>
 </head>
@@ -75,92 +116,110 @@
 <div id="header" th:replace="fragments/user/header_user :: header"></div>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-5">Chi tiết Câu Lạc Bộ</h2>
-
     <div style="margin-top: -20px">
         <a th:href="@{/}">
             <i class="bi bi-arrow-bar-left"></i> Quay lại
         </a>
     </div>
 
-    <form th:object="${club}" method="post" enctype="multipart/form-data"
-          class="form-container border rounded p-4 shadow-lg">
+    <div class="container mt-5">
 
-        <input type="hidden" th:field="*{club_id}"/>
-        <input type="hidden" th:field="*{user.name}"/>
+        <!-- Thông tin Club -->
+        <form th:object="${club}" method="post" enctype="multipart/form-data"
+              class="form-container card p-4 mb-5 shadow-sm">
 
-
-
-        <div class="row mb-4">
-            <!-- Cột ảnh -->
-            <div class="col-md-4">
-                <div class="mb-4">
-                    <label class="form-label club-info-label">Ảnh đại diện</label>
-                    <img id="preview" th:src="@{'/uploadFile/' + *{image}}" alt="Ảnh đại diện"
-                         class="img-fluid rounded shadow-sm club-img-shadow">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-4 text-center">
+                        <label class="form-label club-info-label fw-bold">Ảnh đại diện</label>
+                        <img id="preview" th:src="@{'/uploadFile/' + *{image}}" alt="Ảnh đại diện"
+                             class="img-fluid rounded shadow-sm club-img-shadow"
+                             style="max-height: 250px; object-fit: cover; width: 100%;">
+                    </div>
+                    <div class="mb-4 text-center">
+                        <label class="form-label club-info-label fw-bold">Ảnh bìa</label>
+                        <img id="previews" th:src="@{'/uploadFile/' + *{cover_image}}" alt="Ảnh bìa"
+                             class="img-fluid rounded shadow-sm club-img-shadow"
+                             style="max-height: 150px; object-fit: cover; width: 100%;">
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label club-info-label">Ảnh bìa</label>
-                    <img id="previews" th:src="@{'/uploadFile/' + *{cover_image}}" alt="Ảnh bìa"
-                         class="img-fluid rounded shadow-sm club-img-shadow">
-                </div>
-            </div>
+                <!-- Thông tin Club -->
+                <div class="col-md-8 d-flex flex-column justify-content-center gap-3">
 
-            <!-- Cột thông tin -->
-            <div class="col-md-8">
-                <div class="mb-3">
-                    <h1 style="margin-top: 20px;font-size: 3em" class="card-title mb-1 text-truncate"
-                        th:text="${club.name}"></h1>
-                </div>
+                    <h1 class="mb-4 fw-bold club-name" th:text="${club.name}" style="font-size: 3rem; color: #2c3e50;"></h1>
 
-                <div class="mb-3">
-                    <p class="card-text d-flex align-items-center fs-4 mb-0">
-                        <strong class="me-3">Thể loại:</strong>
-                        <span class="text-success text-truncate" th:text="${club.type}"></span>
-                    </p>
-                </div>
-
-
-                <div class="d-flex justify-content-between align-items-start w-100">
-                    <div>
-                        <p class="card-text mb-4 fs-4 d-flex align-items-center">
-                            <i class="bi bi-geo-alt-fill text-danger me-2 fs-4"></i>
-                            <span class="text-truncate" style="max-width: 100%;" th:text="${club.address}"></span>
-                        </p>
-                        <p class="card-text mb-4 fs-4 d-flex align-items-center">
-                            <i class="bi bi-clock-fill text-primary me-2 fs-4"></i>
-                            <span th:text="${club.open_time}"></span>
-                            &nbsp;-&nbsp;
-                            <span th:text="${club.close_time}"></span>
-                        </p>
-                        <p class="card-text mb-4 fs-4 d-flex align-items-center">
-                            <i class="bi bi-telephone-fill text-success me-2 fs-4"></i>
-                            <span th:text="${club.user.phone}"></span>
-                        </p>
+                    <div class="info-box p-3 rounded shadow-sm d-flex align-items-center gap-3">
+                        <i class="bi bi-geo-alt-fill fs-3 text-danger"></i>
+                        <div>
+                            <div class="info-label fw-semibold text-muted mb-1">Địa chỉ</div>
+                            <div class="info-content" th:text="${club.address}" style="font-size: 1.1rem; color: #34495e;"></div>
+                        </div>
                     </div>
 
+                    <div class="info-box p-3 rounded shadow-sm d-flex align-items-center gap-3">
+                        <i class="bi bi-clock-fill fs-3 text-primary"></i>
+                        <div>
+                            <div class="info-label fw-semibold text-muted mb-1">Giờ mở cửa</div>
+                            <div class="info-content" style="font-size: 1.1rem; color: #34495e;">
+                                <span th:text="${club.open_time}"></span> - <span th:text="${club.close_time}"></span>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="info-box p-3 rounded shadow-sm d-flex align-items-center gap-3">
+                        <i class="bi bi-telephone-fill fs-3 text-success"></i>
+                        <div>
+                            <div class="info-label fw-semibold text-muted mb-1">Điện thoại</div>
+                            <div class="info-content" th:text="${club.user.phone}" style="font-size: 1.1rem; color: #34495e;"></div>
+                        </div>
+                    </div>
+
+                    <a th:href="@{'/home/dat?club_id=' + ${club.club_id}}"
+                       class="btn btn-success btn-lg mt-4 px-4 mx-auto d-block"
+                       style="font-weight: 600; letter-spacing: 1px; text-align: center;">
+                        Đặt lịch
+                    </a>
                 </div>
-                <div style="padding-right: 10px;text-align: center">
-                    <a th:href="@{'/home/dat?club_id=' + ${club.club_id}}" type="button"
-                       class="btn btn-outline-success btn-sm fs-4 px-4 py-2">Đặt lịch</a>
+
+            </div>
+        </form>
+
+
+        <!-- Hình ảnh sân -->
+        <div class="card p-4 mb-5 shadow-sm">
+            <h5 class="section-title mb-4">Hình ảnh sân câu lạc bộ</h5>
+            <div th:if="${imageUrls != null and !#lists.isEmpty(imageUrls)}" class="d-flex flex-wrap gap-3">
+                <div class="image-wrapper" th:each="img : ${imageUrls}">
+                    <img th:src="@{'/uploadFile/' + ${img.link}}" alt="Ảnh sân" class="club-img-shadow rounded" style="width: 180px; height: 180px; object-fit: cover;">
                 </div>
+            </div>
+            <div th:if="${imageUrls == null or #lists.isEmpty(imageUrls)}" class="text-center text-muted fst-italic py-5">
+                Chưa có hình ảnh nào
             </div>
         </div>
-    </form>
 
-    <div class="mt-4">
-        <h5 class="mb-3">Hình ảnh sân câu lạc bộ</h5>
-        <div >
-            <div th:if="${imageUrls != null and !#lists.isEmpty(imageUrls)}" id="imagePreview" class="form-container border rounded p-4 shadow-lg">
-                <div class="image-wrapper" th:each="img : ${imageUrls}" >
-                    <img th:src="@{'/uploadFile/' + ${img.link}}" alt="Ảnh đã lưu" class="club-img-shadow" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px;">
-                </div>
-            </div>
-
-            <div th:if="${imageUrls == null or #lists.isEmpty(imageUrls)}" class="text-center text-muted fst-italic" style="padding: 40px 0;">
-                Chưa có hình ảnh nào
+        <!-- Bảng giá sân -->
+        <div class="card p-4 mb-5 shadow-sm">
+            <h5 class="section-title mb-4">Bảng giá sân</h5>
+            <table th:if="${courts != null and !#lists.isEmpty(courts)}" class="table table-bordered table-hover">
+                <thead class="table-light">
+                <tr>
+                    <th>Tên sân</th>
+                    <th>Giá (VNĐ)</th>
+                    <th>Loại sân</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="court : ${courts}">
+                    <td th:text="${court.name}"></td>
+                    <td th:text="${#numbers.formatDecimal(court.price, 0, 'COMMA', 0, 'POINT')}"></td>
+                    <td th:text="${court.type}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:if="${courts == null or #lists.isEmpty(courts)}" class="text-center text-muted fst-italic py-4">
+                Chưa có sân nào
             </div>
         </div>
     </div>

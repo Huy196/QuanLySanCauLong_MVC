@@ -72,6 +72,7 @@ public class HomeController {
         }
 
         model.addAttribute("club", club);
+        model.addAttribute("courts", courts);
         model.addAttribute("user", user);
         model.addAttribute("imageUrls", imageUrls);
         return "user/detail_club";
